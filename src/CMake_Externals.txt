@@ -1,0 +1,4 @@
+
+include_directories( ${SpheresEngine_SOURCE_DIR}/../SpheresEngine/external/inotify-cxx ) 
+include_directories( ${SpheresEngine_SOURCE_DIR}/../SpheresEngine/external ) 
+ 

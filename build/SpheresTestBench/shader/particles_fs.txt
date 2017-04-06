@@ -1,0 +1,15 @@
+// supported on OpenGL ES 2.0
+//#version 100 es
+  
+uniform sampler2D tex;
+in vec4 fragInstanceColor;
+
+uniform float user0;
+
+// this is automatically used as the output color variable
+// by GLSL
+out vec4 finalColor;
+
+void main() {
+    finalColor = user0 * fragInstanceColor;
+}

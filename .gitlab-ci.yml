@@ -1,0 +1,26 @@
+#image: ubuntu:16.04
+
+#before_script:
+#  - apt-get update -qq
+#  - apt-get install -y build-essential iwyu cmake g++
+#  - apt-get install -y libglm-dev libglew-dev libboost-dev freeglut3-dev
+#  - apt-get install -y libsdl2-image-dev libsdl2-dev
+
+image: poseidn/ubuntu-buildbox
+
+compile-linux:
+  script:
+     - ls -lah 
+     - g++ --version
+     - cd build/
+     - cmake ../src
+     - make -j2
+     - SpheresTest/SpheresTest
+
+compile-androidvr:
+  script:
+     - ./distributeAssets.sh
+     - cd build_androidvr/
+     - ./get_externals.sh
+     - ./gradlew # still fails because licence has not been accepted
+

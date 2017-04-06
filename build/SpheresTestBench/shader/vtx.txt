@@ -1,0 +1,30 @@
+// Desktop System version
+// supported on OpenGL 2.0
+//#version 130        
+
+uniform mat4 projection;
+uniform mat4 camera;
+uniform mat4 model; //this is the new variable
+
+in vec3 vert;
+in vec2 vertTexCoord;
+in vec3 normals_modelspace;
+
+out vec2 fragTexCoord;
+out vec3 normals_cameraspace;
+out vec3 lightdirection_cameraspace;
+
+void main(void) {                    
+
+    // pass on u,v tex coordinates
+    fragTexCoord = vertTexCoord;
+    
+    // this also outputs the zBuffer value in the gl_Position.z component
+    gl_Position = projection * camera * model * vec4(vert, 1);
+    
+    // transform the normals with the model rotation
+    // this will not work, if the model is also scaled
+    normals_cameraspace = ( model * vec4(normals_modelspace,0)).xyz;; //(camera * model * vec4(normals_modelspace,0)).xyz;
+    lightdirection_cameraspace = (camera * vec4(1,1,0,1)).xyz;
+    
+}

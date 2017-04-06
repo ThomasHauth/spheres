@@ -1,0 +1,25 @@
+// supported on OpenGL ES 2.0
+//#version 100 es
+  
+uniform sampler2D tex;
+in vec2 fragTexCoord;
+in vec3 normals_cameraspace;
+in vec3 lightdirection_cameraspace;
+
+// this is automatically used as the output color variable
+// by GLSL
+out vec4 finalColor;
+
+void main() {
+	
+	float ambientLightAmount = 0.1;
+	
+	vec3 n = normalize(normals_cameraspace);
+	vec3 l = normalize(vec3(1,0.5,0));
+	
+	float cosTheta = clamp( dot( l, n), 
+							ambientLightAmount,1.0 );
+	
+
+    finalColor = texture(tex, fragTexCoord) * cosTheta;
+}

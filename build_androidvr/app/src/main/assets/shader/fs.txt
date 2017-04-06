@@ -1,0 +1,17 @@
+// supported on OpenGL ES 2.0
+//#version 100 es
+       
+uniform sampler2D tex;
+
+varying vec2 fragTexCoord;
+varying vec3 normals_cameraspace;
+       
+void main(void) {        
+    
+    float ambientLightAmount = 0.4;
+	vec3 lightDirection = vec3(1,0.6,0);
+	float cosTheta = clamp( dot( lightDirection, normals_cameraspace), 
+							ambientLightAmount,1.0 );
+
+    gl_FragColor = texture2D(tex, fragTexCoord) * cosTheta;
+}

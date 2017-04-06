@@ -1,0 +1,3 @@
+include ':app'
+// this is the common Google VR library
+include ':libraries:common'

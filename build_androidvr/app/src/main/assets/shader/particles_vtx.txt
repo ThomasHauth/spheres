@@ -1,0 +1,24 @@
+// Desktop System version
+// supported on OpenGL 2.0
+//#version 130        
+
+
+uniform mat4 projection;
+uniform mat4 camera;
+uniform mat4 model; //this is the new variable
+
+attribute vec3 vert;
+attribute vec4 vertInstanceCenter;
+//in vec4 vertInstanceColor;
+//in vec2 vertTexCoord;
+//out vec2 fragTexCoord;
+ 
+void main(void) {                    
+
+    // pass on u,v tex coordinates
+    //fragTexCoord = vertTexCoord;
+    
+    gl_Position = projection * camera * model * vec4(vert, 1) + 
+        // move by the offset of this very particle
+        vec4(vertInstanceCenter.xyz, 1);
+}

@@ -1,0 +1,47 @@
+// Desktop System version
+// supported on OpenGL 2.0
+//#version 130        
+
+
+uniform mat4 projection;
+uniform mat4 camera;
+uniform mat4 model; //this is the new variable
+
+// this the current rotation of the center of the galaxy, range 0.0 to 1.0
+uniform float user0;
+
+in vec3 vert;
+in vec4 vertInstanceCenter;
+in vec4 vertInstanceColor;
+out vec4 fragInstanceColor;
+ 
+void main(void) {                    
+
+    // pass on u,v tex coordinates
+    fragInstanceColor = vertInstanceColor;
+
+	// ensure the quad is always facing the camera     
+   /* vec3 CameraRight_worldspace = vec3(camera[0][0], camera[1][0], camera[2][0]); 
+    vec3 CameraUp_worldspace = vec3(camera[0][1], camera[1][1], camera[2][1]);
+
+	vec3 vertexPosition_worldspace =
+	    vertInstanceCenter.xyz
+	    + CameraRight_worldspace * vert.x * vertInstanceCenter.w
+	    + CameraUp_worldspace * vert.y * vertInstanceCenter.w;
+    */
+    
+    // compute distance to center in plane
+    float radial_distance = user0 +  sqrt( vertInstanceCenter.x * vertInstanceCenter.x +
+    							  vertInstanceCenter.y * vertInstanceCenter.y);
+    float g_angle = user0* 2.0 * 3.14;    
+
+    mat3 rotation_matrix_vert = mat3 ( cos( g_angle), -sin(g_angle), 0,
+                                       sin( g_angle), cos(g_angle), 0,
+                                       0            ,            0,  1);
+
+    gl_Position = projection * camera * model * (vec4(rotation_matrix_vert *vert,1) /*vec4(vertexPosition_worldspace, 1)*/ + 
+        // move by the offset of this very particle
+        vec4(vertInstanceCenter.xyz, 1));
+}
+
+

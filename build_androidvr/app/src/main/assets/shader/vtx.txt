@@ -1,0 +1,29 @@
+// mobile system version
+// supported on OpenGL ES 2.0
+// #version 100, but not enabled here because the #version tag is not 
+// supported by OpenGL ES SL 1.0
+// also see: https://github.com/mattdesl/lwjgl-basics/wiki/GLSL-Versions
+
+uniform mat4 projection;
+uniform mat4 camera;
+uniform mat4 model; //this is the new variable
+
+// coming in from the OpenGL Buffer
+attribute vec3 vert;
+attribute vec2 vertTexCoord;
+attribute vec3 normals_modelspace;
+ 
+// passing forward to Fragment Shader
+varying vec2 fragTexCoord; 
+varying vec3 normals_cameraspace;
+
+void main(void) {                    
+    // pass on u,v tex coordinates
+    fragTexCoord = vertTexCoord;
+    
+    // compute position of 
+    gl_Position = projection * camera * model * vec4(vert, 1);
+    normals_cameraspace = (model * vec4(normals_modelspace,1)).xyz;    
+}
+
+

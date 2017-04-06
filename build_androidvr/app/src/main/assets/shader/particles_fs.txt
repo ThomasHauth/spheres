@@ -1,0 +1,13 @@
+// supported on OpenGL ES 2.0
+//#version 300
+  
+uniform sampler2D tex;
+//in vec4 particleColor;
+
+// this is automatically used as the output color variable
+// by GLSL
+//out vec4 finalColor;
+
+void main() {
+    gl_FragColor =  vec4(0.0, 0.0, 0.0, 1.0);
+}
