@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SpheresEngine/Util.h>
+#include <SpheresEngine/Engines.h>
 
 #include <boost/noncopyable.hpp>
 #include <vector>
@@ -30,7 +31,7 @@ private:
 	/**
 	 * internal initialization called by the Entity
 	 */
-	virtual void internal_init(Entity * ent) = 0;
+	virtual void internal_init(Engines &, Entity *) = 0;
 };
 
 /**
@@ -51,7 +52,7 @@ public:
 	 * aspect to register to all kind of signals related to the entity
 	 * or provided by game engines
 	 */
-	virtual void init(TEntity *) {
+	virtual void init(Engines &, TEntity *) {
 	}
 
 private:
@@ -59,11 +60,11 @@ private:
 	/**
 	 * internal initialization called by the Entity
 	 */
-	void internal_init(Entity * ent) override final {
+	void internal_init(Engines & engines, Entity * ent) override final {
 		// upcasting here is possible because we know the upper class
 		TEntity * fc = static_cast<TEntity *>(ent);
 
-		this->init(fc);
+		this->init( engines, fc);
 	}
 };
 

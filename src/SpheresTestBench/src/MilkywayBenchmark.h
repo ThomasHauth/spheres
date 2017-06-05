@@ -33,11 +33,10 @@ public:
 	 * Generate a particle system for the milkyway and generate and animation
 	 * to rotate the galaxy.
 	 */
-	void setupScene(EntityEngine & ee, RenderEngine & re, AnimationEngine & ae,
-			InputEngine & ie) override {
+	void setupScene(Engines & engines) override {
 
-		installShaderProgramDefinitions(re);
-		installCommonEntities(ee, ie);
+		installShaderProgramDefinitions(engines.render);
+		installCommonEntities(engines);
 		/*
 		 MeshVisual mv1("debug_box", "debug_texture");
 		 mv1.getData().Center = glm::vec3(0, 0, 0.5);
@@ -60,19 +59,19 @@ public:
 
 		// the visual will not become available right now, but only once it was been
 		// prepared ...
-		auto prepId = re.addToPrepareVisual(m_particleVisual.get());
+		auto prepId = engines.render.addToPrepareVisual(m_particleVisual.get());
 
 		auto galaxyEntity = std14::make_unique<PositionedEntity>();
 		galaxyEntity->addVisualPlaceholder(prepId); // (m_particleVisual.get());
 		auto galaxyEntityPtr = galaxyEntity.get();
-		ee.addEntity(std::move(galaxyEntity));
+		engines.entity.addEntity(std::move(galaxyEntity));
 
 		auto cameraEntity = std14::make_unique<CameraEntity>();
 		cameraEntity->lookAt(Vector3::zero());
 		cameraEntity->setPosition(Vector3(8, -8, 8));
 		//cameraEntity->setPosition(Vector3(1, 15, 1));
 		//cameraEntity->setPosition(Vector3(8, 0, 8));
-		ee.addEntity(std::move(cameraEntity));
+		engines.entity.addEntity(std::move(cameraEntity));
 
 		// add animation to rotate the galaxy
 		auto lmbRotateGalaxy = [galaxyEntityPtr](float cur, float end)
@@ -85,7 +84,7 @@ public:
 			};
 
 		Animation an( { { 0.0f, Sequence(10.0f, lmbRotateGalaxy) } }, true);
-		ae.addAnimation(an, 0.1f);
+		engines.animation.addAnimation(an, 0.1f);
 	}
 
 	/**

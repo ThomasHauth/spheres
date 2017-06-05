@@ -15,18 +15,10 @@
 class TerminateBenchmarkAspect: public Aspect<Entity> {
 public:
 	/**
-	 * Create and store the input engine reference
-	 */
-	TerminateBenchmarkAspect(InputEngine & ie) :
-			m_ie(ie) {
-
-	}
-
-	/**
 	 * Setup a lambda which checks if there is a new action to terminate the game
 	 */
-	void init(Entity *) override {
-		m_ie.OnNewInputAction.subscribe(
+	void init(Engines & engines, Entity *) override {
+		engines.input.OnNewInputAction.subscribe(
 				[]( InputAction * ia )
 				{
 					logging::Info() << "Received InputAction";
@@ -38,12 +30,6 @@ public:
 				});
 	}
 
-private:
-
-	/**
-	 * Store the input engine for later usage
-	 */
-	InputEngine & m_ie;
 };
 
 /**
@@ -68,8 +54,7 @@ public:
 	 * The concrete implementation can create all content of the scene in this
 	 * method
 	 */
-	virtual void setupScene(EntityEngine &, RenderEngine &, AnimationEngine &,
-			InputEngine &) = 0;
+	virtual void setupScene(Engines & engines) = 0;
 
 	/**
 	 * This method installs the default shaders used for mesh rendering. If a
@@ -89,13 +74,13 @@ public:
 	 * Installs some very common entities, like the one which terminates
 	 * the benchmark on keypress.
 	 */
-	virtual void installCommonEntities(EntityEngine & ee, InputEngine & ie) {
+	virtual void installCommonEntities(Engines & engines) {
 
 		auto controlEntity = std14::make_unique<Entity>();
 
-		controlEntity->addAspect(
-				std14::make_unique<TerminateBenchmarkAspect>(ie));
-		ee.addEntity(std::move(controlEntity));
+		controlEntity->addAspect(engines,
+				std14::make_unique<TerminateBenchmarkAspect>());
+		engines.entity.addEntity(std::move(controlEntity));
 	}
 
 	/**

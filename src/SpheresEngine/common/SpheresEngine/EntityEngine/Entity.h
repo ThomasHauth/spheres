@@ -82,8 +82,8 @@ public:
 	/**
 	 * Add an aspect to this entity.
 	 */
-	void addAspect(uniq<AspectBase> aspect) {
-		aspect->internal_init(this);
+	void addAspect(Engines & engines, uniq<AspectBase> aspect) {
+		aspect->internal_init(engines, this);
 
 		m_aspects.push_back(std::move(aspect));
 	}

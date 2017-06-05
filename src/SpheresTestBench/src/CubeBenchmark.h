@@ -12,6 +12,7 @@
 #include <SpheresEngine/RenderEngine/CommonOpenGL/ParticlesRenderer.h>
 #include <SpheresEngine/EntityEngine/CommonEntities/PositionedEntity.h>
 #include <SpheresEngine/EntityEngine/CommonEntities/CameraEntity.h>
+#include <SpheresEngine/Engines.h>
 
 #include <boost/math/constants/constants.hpp>
 
@@ -25,21 +26,14 @@
  */
 class RotateCubeAspect: public Aspect<PositionedEntity> {
 public:
-	/**
-	 * Store the required engine so they can be used later
-	 */
-	RotateCubeAspect(EntityEngine & ee, InputEngine & ie) :
-			m_ee(ee), m_ie(ie) {
-
-	}
 
 	/**
 	 * Install lambdas to check for input and continue the cube rotation
 	 * on time step
 	 */
-	void init(PositionedEntity * ent) override {
-		m_ie.OnNewInputAction.subscribe(
-				[ent, this]( InputAction * ia )
+	void init(Engines & engines, PositionedEntity * ent) override {
+		engines.input.OnNewInputAction.subscribe(
+				[engines, ent, this]( InputAction * ia )
 				{
 					auto inpAction = dynamic_cast< RotateAction * >(ia);
 					if (inpAction) {
@@ -55,28 +49,21 @@ public:
 					}
 				});
 
-		m_ee.OnTimeStep.subscribe([ent, this] (float timeDelta) {
+		engines.entity.OnTimeStep.subscribe(
+				[engines, ent, this] (float timeDelta) {
 
-			// rotate by timeslice
-				if ( m_lastAxis.length()) {
-					ent->rotate( m_lastAxis ,
-							m_lastAngle * timeDelta);
+					// rotate by timeslice
+					if ( m_lastAxis.length()) {
+						ent->rotate( m_lastAxis ,
+								m_lastAngle * timeDelta);
 
-					// degrade rotation angle
-					m_lastAngle = m_lastAngle - (m_lastAngle * 1.5f *timeDelta);
-				}
-			});
+						// degrade rotation angle
+						m_lastAngle = m_lastAngle - (m_lastAngle * 1.5f *timeDelta);
+					}
+				});
 	}
 
 private:
-	/**
-	 * Ref to Input Engine
-	 */
-	InputEngine & m_ie;
-	/**
-	 * Ref to Entity Engine
-	 */
-	EntityEngine & m_ee;
 
 	/**
 	 * The last axis used for rotation
@@ -105,43 +92,42 @@ public:
 	/**
 	 * Insert the cube and install the aspects which perform the rotation
 	 */
-	void setupScene(EntityEngine & ee, RenderEngine & re, AnimationEngine & ae,
-			InputEngine & ie) override {
-		installShaderProgramDefinitions(re);
-		installCommonEntities(ee, ie);
+	void setupScene(Engines & engines) override {
+		installShaderProgramDefinitions(engines.render);
+		installCommonEntities(engines);
 
-		ie.addTransformer(std14::make_unique<RotateCubeTransform>());
+		engines.input.addTransformer(std14::make_unique<RotateCubeTransform>());
 
 		auto mv1 = new MeshVisual("debug_box", "debug_texture");
 		mv1->getData().Center = glm::vec3(0, 0, 0.5);
-		auto prepId = re.addToPrepareVisual(mv1);
+		auto prepId = engines.render.addToPrepareVisual(mv1);
 
 		auto boxEntity = std14::make_unique<PositionedEntity>();
 		auto boxEntityPtr = boxEntity.get();
 		boxEntity->addVisualPlaceholder(prepId);
-		boxEntity->addAspect(std14::make_unique<RotateCubeAspect>(ee, ie));
-		ee.addEntity(std::move(boxEntity));
+		boxEntity->addAspect(engines, std14::make_unique<RotateCubeAspect>());
+		engines.entity.addEntity(std::move(boxEntity));
 
 		auto cameraEntity = std14::make_unique<CameraEntity>();
 		cameraEntity->lookAt(Vector3::zero());
 		cameraEntity->setPosition(Vector3(5, 3, 0));
-		ee.addEntity(std::move(cameraEntity));
+		engines.entity.addEntity(std::move(cameraEntity));
 
 		// add animation to rotate the galaxy
-		auto lmbRotateCube = [boxEntityPtr](float , float )
-		{
-			/*	boxEntityPtr->resetRotation();
-			 boxEntityPtr->rotate( Vector3(1.0, 0.8,0.6),
-			 // todo: something is still weird with the rotation units,
-			 // therefore this factor of 0.05
-			 0.05f *
-			 (cur / end)
-			 * 2.0f * boost::math::constants::pi<float>());*/
-		};
+		/* disabled for now
+		 auto lmbRotateCube = [boxEntityPtr](float cur , float end )
+		 {
+		 boxEntityPtr->resetRotation();
+		 boxEntityPtr->rotate( Vector3(1.0, 0.8,0.6),
+		 // todo: something is still weird with the rotation units,
+		 // therefore this factor of 0.05
+		 0.05f *
+		 (cur / end)
+		 * 2.0f * boost::math::constants::pi<float>());
+		 }	;
 
-		Animation an( { { 0.0f, Sequence(100.0f, lmbRotateCube) } }, true);
-		ae.addAnimation(an, 0.5f);
-
+		 Animation an( { { 0.0f, Sequence(100.0f, lmbRotateCube) } }, true);
+		 engines.animation.addAnimation(an, 0.5f);*/
 	}
 
 	/**

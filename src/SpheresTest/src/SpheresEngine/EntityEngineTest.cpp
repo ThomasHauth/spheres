@@ -4,6 +4,8 @@
 
 #include <gtest/gtest.h>
 
+#include "TestEngines.h"
+
 class TestEntity: public Entity {
 public:
 	slots::Slot<> m_slotSomeTest;
@@ -13,7 +15,7 @@ class TestAspect: public Aspect<TestEntity> {
 public:
 	virtual ~TestAspect() = default;
 
-	void init(TestEntity * sb) override {
+	void init(Engines &, TestEntity * sb) override {
 		m_initCount++;
 		sb->m_slotSomeTest.subscribe(
 				[this] () {this->m_signalSomeTestCount++;});
@@ -25,10 +27,12 @@ public:
 
 TEST(EntityEngineTest, entityWithAspect) {
 	TestEntity et;
+	TestEngines testEngines;
+	auto engines = testEngines.getEngines();
 
 	auto testAspect = std14::make_unique<TestAspect>();
 
-	et.addAspect(std::move(testAspect));
+	et.addAspect(engines, std::move(testAspect));
 
 	ASSERT_EQ(
 			static_cast<TestAspect*>(et.getAspectsBase()[0].get())->m_initCount,

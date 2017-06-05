@@ -39,6 +39,8 @@ int main() {
 	InputEngine inputEngine;
 	RenderEngine re(std14::make_unique<RenderBackendSDL>(resourceE), resourceE);
 
+	Engines engines(entityEngine, inputEngine, re, animationEngine);
+
 	auto uniqueSdlSource = std14::make_unique<SdlSource>();
 	auto ptrSdlSource = uniqueSdlSource.get();
 	inputEngine.addSource(std::move(uniqueSdlSource));
@@ -47,8 +49,7 @@ int main() {
 
 	selectedBenchmark->setupRenderer(re);
 
-	selectedBenchmark->setupScene(entityEngine, re, animationEngine,
-			inputEngine);
+	selectedBenchmark->setupScene(engines);
 
 	ThreadedGameLoop gameLoop(re, entityEngine, animationEngine, inputEngine,
 			physicsEngine);
