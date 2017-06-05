@@ -74,7 +74,11 @@ public:
 	 * This signal is called every simulation time step. This slot can be used
 	 * by aspects who need to execute code on every time step.
 	 */
-	slots::Slot<float> OnTimeStep;
+
+	typedef slots::Slot<float> OnTimeStep_slot;
+
+	OnTimeStep_slot OnTimeStep;
+
 private:
 
 	/**
