@@ -32,6 +32,7 @@ add_executable(SpheresTest
 	src/SpheresEngine/ResourceEngine/ResourceEngineTest.cpp
 	src/SpheresEngine/InputEngine/InputEngineTest.cpp
 	src/SpheresEngine/PathfindingTest.cpp
+	src/SpheresEngine/SignalsTest.cpp
 )
 
 # linking pthread for google tests 

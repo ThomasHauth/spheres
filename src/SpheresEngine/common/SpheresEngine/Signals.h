@@ -5,10 +5,10 @@
 #include <list>
 #include <vector>
 #include <memory>
+#include <algorithm>
 #include <functional>
 
 #include <boost/noncopyable.hpp>
-#include <boost/ptr_container/ptr_vector.hpp>
 #include <SpheresEngine/Performance/SectionTimer.h>
 #include <SpheresEngine/Timing.h>
 
@@ -33,12 +33,33 @@ typedef std::pair<std::string, float> TimingResult;
 typedef std::vector<TimingResult> TimingResultList;
 
 /**
+ * Non-templated base class so unsubscribing of multiple signals can be handled
+ * in one place
+ */
+class SlotBase {
+public:
+
+	virtual ~SlotBase() {
+	}
+
+	/**
+	 * Unique number by which a specific subscription can be identified
+	 * (and later used to remove a specific subscription)
+	 */
+	typedef unsigned int subscribed_id;
+
+	virtual void unsubscribe(subscribed_id id) = 0;
+
+};
+
+/**
  * Class to create a Slot where users can subscribe to
  * and get notified once the signal() method is called
  */
 template<typename ... Args>
-class Slot {
+class Slot: public SlotBase {
 public:
+
 	/**
 	 * type to store the lambda expression with a variable amount of
 	 * parameters.
@@ -50,8 +71,19 @@ public:
 	 * to this signal slot.
 	 * Name will not be stored, if the signal profiling is not enabled
 	 */
-	void subscribe(func_type f, std::string name = "") {
-		m_functions.push_back(new SlotFunction(name, f));
+	subscribed_id subscribe(func_type f, std::string name = "") {
+		auto freeId = nextFreeId();
+		m_functions.emplace_back(SlotFunction(freeId, name, f));
+
+		// provide id to remove this subscribed
+		return freeId;
+	}
+
+	void unsubscribe(subscribed_id id) override {
+		m_functions.erase(
+				std::remove_if(m_functions.begin(), m_functions.end(),
+						[id]( SlotFunction & sf ) {return sf.getId() == id;}),
+				m_functions.end());
 	}
 
 	/**
@@ -81,17 +113,46 @@ public:
 private:
 
 	/**
+	 * Find the smallest free id
+	 */
+	subscribed_id nextFreeId() const {
+		subscribed_id smallestFree = 0;
+
+		bool didIncrease = true;
+
+		// not the most optimal algorithm but will not fragment id space
+		// and works on unsorted lists
+		while (didIncrease) {
+
+			didIncrease = false;
+			for (auto const& f : m_functions) {
+				if (f.getId() == smallestFree) {
+					// check the next Id
+					smallestFree++;
+					didIncrease = true;
+					// exit for loop, but still stay in the while loop
+					break;
+				}
+			}
+			// ok, all other entries checked and no coninue called ?
+			// while loop will exit
+		}
+
+		return smallestFree;
+	}
+
+	/**
 	 * Internal class to store tha name and the lambda expression of each
 	 * registered subscriber
 	 */
-	class SlotFunction: boost::noncopyable {
+	class SlotFunction {
 	public:
 		/**
 		 * Create a new slot function clsas using the name for profiling
 		 * and the lambda expression
 		 */
-		SlotFunction(std::string const& name, func_type func) :
-				m_function(func)
+		SlotFunction(subscribed_id id, std::string const& name, func_type func) :
+				m_id(id), m_function(func)
 #ifdef DESCENT_SIGNAL_PROFILE
 		, m_name(name)
 #endif
@@ -107,12 +168,18 @@ private:
 			return m_function;
 		}
 
+		subscribed_id getId() const {
+			return m_id;
+		}
+
 	private:
 
 		/**
-		 * Stored lambda expresion
+		 * Stored lambda expression
 		 */
 		func_type m_function;
+
+		subscribed_id m_id;
 
 #ifdef DESCENT_SIGNAL_PROFILE
 	public:
@@ -128,7 +195,7 @@ private:
 	/**
 	 * List of all functions stored as subscribers to this signal
 	 */
-	boost::ptr_vector<SlotFunction> m_functions;
+	std::vector<SlotFunction> m_functions;
 
 #ifdef DESCENT_SIGNAL_PROFILE
 

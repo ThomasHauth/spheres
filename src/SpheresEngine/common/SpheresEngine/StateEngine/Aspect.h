@@ -2,6 +2,7 @@
 
 #include <SpheresEngine/Util.h>
 #include <SpheresEngine/Engines.h>
+#include <SpheresEngine/Signals.h>
 
 #include <boost/noncopyable.hpp>
 #include <vector>
@@ -22,9 +23,19 @@ public:
 	friend Entity;
 
 	/**
-	 * provide dtor to support inheritance
+	 * provide dtor to support inheritance and clean up all
+	 * subscriptions of this aspect
 	 */
-	virtual ~AspectBase() = default;
+	virtual ~AspectBase() {
+		for (auto & sub_pair : m_managedSubsciptions) {
+			sub_pair.first->unsubscribe(sub_pair.second);
+		}
+	}
+
+	void addManagedSubscription(slots::SlotBase * pSlot,
+			slots::SlotBase::subscribed_id id) {
+		m_managedSubsciptions.push_back(std::make_pair(pSlot, id));
+	}
 
 private:
 
@@ -32,6 +43,8 @@ private:
 	 * internal initialization called by the Entity
 	 */
 	virtual void internal_init(Engines &, Entity *) = 0;
+
+	std::vector<std::pair<slots::SlotBase *, slots::SlotBase::subscribed_id>> m_managedSubsciptions;
 };
 
 /**
@@ -55,6 +68,12 @@ public:
 	virtual void init(Engines &, TEntity *) {
 	}
 
+	/**
+	 * can be overwritten by user-code to deregister subscribed signals
+	 */
+	virtual void cleanup(Engines &) {
+	}
+
 private:
 
 	/**
@@ -64,8 +83,9 @@ private:
 		// upcasting here is possible because we know the upper class
 		TEntity * fc = static_cast<TEntity *>(ent);
 
-		this->init( engines, fc);
+		this->init(engines, fc);
 	}
+
 };
 
 /**

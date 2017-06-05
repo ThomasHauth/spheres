@@ -32,35 +32,37 @@ public:
 	 * on time step
 	 */
 	void init(Engines & engines, PositionedEntity * ent) override {
-		engines.input.OnNewInputAction.subscribe(
-				[engines, ent, this]( InputAction * ia )
-				{
-					auto inpAction = dynamic_cast< RotateAction * >(ia);
-					if (inpAction) {
-						logging::Info() << "Received RotateAction, will adapt rotation speed of cube";
-						//ent->resetRotation();
-						this->m_lastAxis = inpAction->RotationAxis;
-						// todo: something is still weird with the rotation units,
-						// therefore this factor of 0.05
-						this->m_lastAngle =
-						- 0.003f * inpAction->Speed /**
-						 *(cur / end)*/
-						* 2.0f * boost::math::constants::pi<float>();
-					}
-				});
+		this->addManagedSubscription(&engines.input.OnNewInputAction,
+				engines.input.OnNewInputAction.subscribe(
+						[engines, ent, this]( InputAction * ia )
+						{
+							auto inpAction = dynamic_cast< RotateAction * >(ia);
+							if (inpAction) {
+								logging::Info() << "Received RotateAction, will adapt rotation speed of cube";
+								//ent->resetRotation();
+								this->m_lastAxis = inpAction->RotationAxis;
+								// todo: something is still weird with the rotation units,
+								// therefore this factor of 0.05
+								this->m_lastAngle =
+								- 0.003f * inpAction->Speed /**
+								 *(cur / end)*/
+								* 2.0f * boost::math::constants::pi<float>();
+							}
+						}));
 
-		engines.entity.OnTimeStep.subscribe(
-				[engines, ent, this] (float timeDelta) {
+		this->addManagedSubscription(&engines.entity.OnTimeStep,
+				engines.entity.OnTimeStep.subscribe(
+						[engines, ent, this] (float timeDelta) {
 
-					// rotate by timeslice
-					if ( m_lastAxis.length()) {
-						ent->rotate( m_lastAxis ,
-								m_lastAngle * timeDelta);
+							// rotate by timeslice
+							if ( m_lastAxis.length()) {
+								ent->rotate( m_lastAxis ,
+										m_lastAngle * timeDelta);
 
-						// degrade rotation angle
-						m_lastAngle = m_lastAngle - (m_lastAngle * 1.5f *timeDelta);
-					}
-				});
+								// degrade rotation angle
+								m_lastAngle = m_lastAngle - (m_lastAngle * 1.5f *timeDelta);
+							}
+						}));
 	}
 
 private:
