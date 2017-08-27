@@ -19,7 +19,6 @@ public:
 	 */
 	typedef std::pair<UserId, Input> UserInputPair;
 
-
 	/**
 	 * Needs to be implemented by inheriting classes to
 	 * provided the input read out from the hardware
@@ -27,4 +26,26 @@ public:
 	 * 		   the hardware
 	 */
 	virtual std::vector<UserInputPair> readInput() = 0;
+
+	/**
+	 * Will be called before the first readInput call
+	 * to allow the source to prepare.
+	 */
+	virtual void enableSource() {
+		m_isEnabled = true;
+	}
+
+	/**
+	 * Will be called once the source is not used any more
+	 */
+	virtual void disableSource() {
+		m_isEnabled = false;
+	}
+
+	bool isEnabled() const {
+		return m_isEnabled;
+	}
+
+protected:
+	bool m_isEnabled = false;
 };

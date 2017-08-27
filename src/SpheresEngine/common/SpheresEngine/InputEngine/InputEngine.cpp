@@ -4,6 +4,10 @@ void InputEngine::process() {
 	std::vector < std::pair<UserId, Input> > allInputs;
 
 	for (auto & source : m_sources) {
+		if (!source->isEnabled()) {
+			source->enableSource();
+		}
+
 		auto input = source->readInput();
 		allInputs.insert(allInputs.end(), input.begin(), input.end());
 	}

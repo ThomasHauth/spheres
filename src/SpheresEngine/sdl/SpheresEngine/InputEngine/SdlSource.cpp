@@ -34,5 +34,21 @@ void SdlSource::notifyEvent(SDL_Event evt) {
 						Input::createButtonUp(Input::Device::Keyboard,
 								btnType)));
 		break;
+
+	case SDL_MOUSEMOTION:
+		m_inputs.push_back(
+				std::make_pair(UserId::useDefault(),
+						Input::createMouseMove(
+								Vector2(evt.motion.xrel, evt.motion.yrel))));
+		break;
 	}
+}
+
+void SdlSource::enableSource() {
+	if (m_grabMouse) {
+		// this will lock the mouse cursor to within the SDL window
+		// and also hide the cursor
+		SDL_SetRelativeMouseMode(SDL_TRUE);
+	}
+	m_isEnabled = true;
 }
