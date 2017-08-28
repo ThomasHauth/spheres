@@ -9,6 +9,13 @@
 
 typedef glm::quat Quaternion;
 
+namespace QuaternionSupport {
+inline Quaternion pointForwardAndUp() {
+	// point forward in OpenGL coords and no rotation
+	return Quaternion(0, glm::vec3(0, 0, -1.0));
+}
+}
+
 /**
  * Mixin for a vector with x component
  */
