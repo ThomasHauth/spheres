@@ -57,8 +57,10 @@ std::vector<RendererVisualChange> MeshRenderer::render(
 		m.Shader.setUniform("projection", td.ProjectionMatrix);
 		m.Shader.setUniform("camera", td.CameraMatrix);
 
-		glm::mat4 model_mat = glm::translate(glm::mat4(), m.Center);
-		model_mat = glm::mat4_cast(m.Rotation) * model_mat;
+		glm::mat4 model_mat = glm::translate(glm::mat4(), -m.Center);
+		// rotation first (on the right) to act on the origin coords of the model
+		// and then translate into global coords.
+		model_mat = model_mat * glm::mat4_cast(m.Rotation);
 		m.Shader.setUniform("model", model_mat);
 
 		backend.ext_glBindVertexArray(m.VertexArrayObjectId);
