@@ -49,7 +49,7 @@ std::vector<RendererVisualChange> MeshRenderer::render(
 
 		// set the texture unit to use explicitly, cause Android VR is also using textures
 		// to draw on
-		glActiveTexture(GL_TEXTURE0);
+		glActiveTexture (GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, m.TextureId);
 
 		m.Shader.setUniform("tex", 0);
