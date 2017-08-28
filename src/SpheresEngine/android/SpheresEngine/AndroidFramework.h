@@ -2,6 +2,7 @@
 
 #include <SpheresEngine/RenderEngine/RenderBackendAndroid.h>
 #include <SpheresEngine/JavaInterface.h>
+#include <SpheresEngine/Engines.h>
 #include <SpheresEngine/ThreadedGameLoop.h>
 #include <SpheresEngine/AnimationEngine/AnimationEngine.h>
 #include <SpheresEngine/RenderEngine/RenderEngine.h>
@@ -162,6 +163,10 @@ public:
 	 */
 	virtual void resumeInput() {
 
+	}
+
+	Engines getEngines() {
+		return Engines( m_entityEngine, m_inputEngine, *m_re.get(), m_animationEngine );
 	}
 
 protected:
