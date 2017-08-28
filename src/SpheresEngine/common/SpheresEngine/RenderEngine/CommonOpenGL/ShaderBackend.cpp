@@ -13,7 +13,7 @@ std::vector<RendererVisualChange> ShaderBackend::checkReload() {
 	if (m_reloadCheck > m_reloadCheckInterval) {
 		m_reloadCheck = 0;
 
-		std::vector<std::string> changedFilesToRemove;
+		std::vector < std::string > changedFilesToRemove;
 		auto changedFiles = m_re.getChangedFiles();
 
 		// check for changes ...
@@ -90,7 +90,7 @@ ShaderProgram ShaderBackend::loadProgram(std::string name, bool ignoreCache,
 	}
 
 	std::vector<Shader> compiledShaders;
-	std::vector<std::string> fileNames;
+	std::vector < std::string > fileNames;
 	for (auto shader : itProgDef->second) {
 		auto filename_shader = loadShader(shader.first, shader.second, noWatch);
 
@@ -178,7 +178,7 @@ GLint ShaderProgram::getUniformLocation(std::string name) const {
 		GLint uniformNumber;
 		glGetProgramiv(getId(), GL_ACTIVE_UNIFORMS, &uniformNumber);
 
-		std::vector<GLuint> uniformIndices;
+		std::vector < GLuint > uniformIndices;
 		std::vector<char*> uniformNames;
 		logging::Info() << "Got " << uniformNumber << " active uniforms";
 
@@ -217,6 +217,10 @@ void ShaderProgram::setUniform(std::string name,
 
 void ShaderProgram::setUniform(std::string name, float v) const {
 	glUniform1f(getUniformLocation(name), v);
+}
+
+void ShaderProgram::setUniform(std::string name, glm::vec3 v) const {
+	glUniform3f(getUniformLocation(name), v.x, v.y, v.z);
 }
 
 void ShaderProgram::setName(std::string name) {

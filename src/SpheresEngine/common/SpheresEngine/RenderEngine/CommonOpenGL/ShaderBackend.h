@@ -110,6 +110,12 @@ public:
 			GLboolean transpose = false) const;
 
 	/**
+	 * Set the value of a uniform of type vec3, using th glm::vec3
+	 * class as input
+	 */
+	void setUniform(std::string name, glm::vec3) const;
+
+	/**
 	 * Set the value of a uniform of type matrix, using the flat array here
 	 * as input
 	 */
@@ -200,7 +206,7 @@ private:
 	 * Convert the slot number of a shader to string
 	 */
 	std::string toVar(char slot) const {
-		return "user" + boost::lexical_cast<std::string>(int(slot));
+		return "user" + boost::lexical_cast < std::string > (int(slot));
 	}
 
 	/**
