@@ -80,6 +80,10 @@ public:
 		return Input(dev, Type::ButtonUp, btn);
 	}
 
+	static Input createMouseMove(Vector2 relativeMovement) {
+		return Input(Device::Mouse, Type::Direction, relativeMovement);
+	}
+
 	/**
 	 * Return the type of this input
 	 */
@@ -140,6 +144,13 @@ private:
 	}
 
 	/**
+	 * Create an Input object and set the device, the input type and the direction of the movement
+	 */
+	Input(Device dev, Type type, Vector2 dir) :
+			m_device(dev), m_type(type), m_direction(dir) {
+
+	}
+	/**
 	 * Store the type of this input class
 	 */
 	Type m_type = Type::NotSet;
@@ -168,7 +179,7 @@ private:
 	 * with buttons, this can be the number of the button, with direction
 	 * this can be the number of the analog stick.
 	 * Not used yet.
-	*/
+	 */
 	int m_inputElementIndifier = 0;
 
 	/**
