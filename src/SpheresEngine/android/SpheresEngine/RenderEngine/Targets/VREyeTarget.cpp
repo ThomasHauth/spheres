@@ -65,7 +65,11 @@ TargetData VREyeTarget::beforeRenderToTarget(VisualDataExtractContainer & vd,  s
                         // far clipping plane
                        500.0f);
 */
-    td.CameraMatrix = androidVrBackend->getLeftRightEyeView()[m_eyeNumber];
+    // offset by the total camera position,
+    // lookAt of Camera data is ignored on purpose as this is VR and
+    // the user decides where to look
+    td.CameraMatrix = glm::translate( androidVrBackend->getLeftRightEyeView()[m_eyeNumber],
+                                       vd.CameraData.Position.toGlm() );
 
 
 /*
