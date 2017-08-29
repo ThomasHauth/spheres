@@ -2,31 +2,53 @@
 #include <boost/algorithm/string/classification.hpp>
 #include <SpheresEngine/ResourceEngine/MeshLoader.h>
 
-MeshData MeshLoader::loadMesh(std::string meshData) {
+std::map<std::string, MeshData> MeshLoader::loadMesh(std::string meshData) {
 	MeshData md;
+	std::map<std::string, MeshData> mdMap;
 
-	std::vector<Vector3> vtxPos;
-	std::vector<Vector3> vtxNormal;
-	std::vector<Vector2> uv;
+	struct MdRawStruct {
+		std::vector<Vector3> vtxPos;
+		std::vector<Vector3> vtxNormal;
+		std::vector<Vector2> uv;
+	};
 
-	std::vector<int> facesPositions;
-	std::vector<int> facesNormalIndex;
+	// Important: This contains the vertex, normal and uv data loaded from one obj
+	// The indexing for different objects in on the total list of vertex data contained
+	// in the file !
+	MdRawStruct mdRaw;
 
 	std::vector < std::string > lines;
 	boost::split(lines, meshData, boost::is_any_of("\n"));
 
-	// todo: vt is texture position ...
+	util::ValidValue<std::string> thisObjectName;
 
 	for (std::string sLine : lines) {
 
 		std::vector < std::string > strs;
 		boost::split(strs, sLine, boost::is_any_of(" "));
 
+		std::cout << sLine << std::endl;
+		if (strs.size() > 1) {
+			if (strs[0] == "o") {
+				if (thisObjectName.isValid()) {
+					mdMap[thisObjectName.get()] = md;
+					/// crate new MeshData instance for this object, but keep the
+					// content of MdRawStruct, as the vertex position is shared
+					// between objects in one file.
+					md = MeshData();
+				}
+				// store the object name of the mesh data to follow
+				thisObjectName = strs[1];
+			}
+		}
+
 		if (strs.size() > 3) {
 			if (strs[0] == "v") {
-				vtxPos.push_back(parseVector<Vector3>(strs));
+				auto p = parseVector<Vector3>(strs);
+				std::cout << " got v " << p.x() << " | " << p.y() << std::endl;
+				mdRaw.vtxPos.push_back(parseVector<Vector3>(strs));
 			} else if (strs[0] == "vn") {
-				vtxNormal.push_back(parseVector<Vector3>(strs));
+				mdRaw.vtxNormal.push_back(parseVector<Vector3>(strs));
 			} else if (strs[0] == "f") {
 				std::vector< PosTexNormalTuple > face_info_list = { {parseFaceTuple(strs[1]), parseFaceTuple(
 								strs[2]), parseFaceTuple(strs[3])}};
@@ -34,13 +56,13 @@ MeshData MeshLoader::loadMesh(std::string meshData) {
 				// compile the vertex positions, uv values and normals
 				// for all three coordinates forming the trinangle's face
 				for ( auto face_info: face_info_list ) {
-					auto facePos = vtxPos[std::get < 0 > (face_info).get() - 1];
+					auto facePos = mdRaw.vtxPos[std::get < 0 > (face_info).get() - 1];
 					util::ValidValue<Vector2> faceUv;
 
 					if (std::get < 1 > (face_info).isValid() ) {
-						faceUv.setValue( uv[std::get < 1 > (face_info).get() - 1] );
+						faceUv.setValue( mdRaw.uv[std::get < 1 > (face_info).get() - 1] );
 					}
-					auto normalPos = vtxNormal[std::get < 2> (face_info).get() - 1];
+					auto normalPos = mdRaw.vtxNormal[std::get < 2> (face_info).get() - 1];
 
 					md.Position.push_back ( facePos);
 					if ( faceUv.isValid() ) {
@@ -51,15 +73,20 @@ MeshData MeshLoader::loadMesh(std::string meshData) {
 			}
 		} else if ( strs.size() == 3 ) {
 			if (strs[0] == "vt") {
-				uv.push_back(parseVector2<Vector2>(strs));
+				mdRaw.uv.push_back(parseVector2<Vector2>(strs));
 			}
 		}
 	}
 
-	logging::Info() << "Mesh Data " << meshData << " with "
-			<< md.getVertexCount() << " vertices loaded";
+	// store the last loaded object
+	if (thisObjectName.isValid()) {
+		mdMap[thisObjectName.get()] = md;
+	}
 
-	return md;
+	logging::Info() << "Mesh Data " << meshData << " of " << mdMap.size()
+			<< " meshes loaded";
+
+	return mdMap;
 }
 
 MeshLoader::PosTexNormalTuple MeshLoader::parseFaceTuple(std::string ft) const {

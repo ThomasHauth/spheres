@@ -15,9 +15,11 @@ public:
 
 	/**
 	 * Load and return mesh data from a multi-line string
-	 * loaded from the mesh .obj file
+	 * loaded from the mesh .obj file.
+	 * Multiple mesh-data can be returned, as multiple objects
+	 * can be contained in one obj file
 	 */
-	MeshData loadMesh(std::string meshData);
+	std::map<std::string, MeshData> loadMesh(std::string meshData);
 
 	/**
 	 * This tuple contains all the (optional) data that can be extracted
