@@ -56,7 +56,7 @@ public:
 	 */
 	std::vector<GLfloat> asConfigurable(bool withXYZ, bool withUV,
 			bool withNormal) const {
-		std::vector<GLfloat> v;
+		std::vector < GLfloat > v;
 
 		if ((UV.size() == 0) && (Position.size() > 0)) {
 			logging::Fatal()
