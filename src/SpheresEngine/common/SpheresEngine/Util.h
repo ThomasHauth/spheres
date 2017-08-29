@@ -56,6 +56,14 @@ public:
 	}
 
 	/**
+	 * Simply returns an invalid instance of this class. This can be
+	 * used to be more explicit than just using the default ctor
+	 */
+	static ValidValue<TVal> invalid() {
+		return ValidValue<TVal>();
+	}
+
+	/**
 	 * Set the value held in this class
 	 */
 	void setValue(TVal const& v) {
