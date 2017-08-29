@@ -2,6 +2,9 @@
 #include <sstream>
 
 #include <boost/filesystem.hpp>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
+#include <algorithm>
 
 #include <SDL2/SDL_image.h>
 #include <SpheresEngine/ResourceEngine/ResourceEngine.h>
@@ -15,13 +18,46 @@ std::pair<std::string, std::string> ResourceEngine::loadShader(
 }
 
 MeshData ResourceEngine::loadMesh(std::string meshName) {
+
+	// not very optimal atm, as we will parse a file multipl times to extract
+	// the one mesh we are looking for. In production, .obj parsing will anyhow
+	// be replaced by a faster binary-based method
 	MeshLoader ml;
 
-	const std::string fileName(getMeshPrefix() + meshName + ".obj");
+	// todo: break up file name & mesh name
+	std::vector < std::string > meshNamesSplit;
+	boost::split(meshNamesSplit, meshName, boost::is_any_of("_"),
+			boost::token_compress_on);
+
+	if (meshNamesSplit.size() < 2) {
+		logging::Fatal() << "Cannot split OBJ filename from mesh name "
+				<< meshName;
+	}
+	const auto fileNamePart = meshNamesSplit[0];
+	// only use the first part of the mesh name, blender generates a third object name part
+	// from the mesh name, but we will ignore this here
+	const auto meshNameOnly = meshNamesSplit[1];
+
+	const std::string fileName(getMeshPrefix() + fileNamePart + ".obj");
 	auto tf = loadTextFile(fileName);
 
-	// todo: ignored file watcher for now ..
-	return ml.loadMesh(tf);
+	auto loadedMeshes = ml.loadMesh(tf);
+
+	for (auto & kvMesh : loadedMeshes) {
+		std::vector < std::string > namesSplit;
+		boost::split(namesSplit, kvMesh.first, boost::is_any_of("_"),
+				boost::token_compress_on);
+		// only compare the first part of the mesh name and ignore the rest
+		if (namesSplit.size() > 0) {
+			if (namesSplit[0] == meshNameOnly) {
+				return kvMesh.second;
+			}
+		}
+	}
+	logging::Fatal() << "Mesh with name " << meshName
+			<< " was not found in file " << fileName;
+	// keep the compiler happy !
+	return MeshData();
 }
 
 std::string ResourceEngine::loadTextFile(std::string const& fileName,
@@ -67,8 +103,8 @@ void ResourceEngine::installWatch(std::string fileName) {
 		// no watch yet installed, do so
 		logging::Info() << "Installing inotify watch for folder " << folder_only
 				<< ", watching for file " << fileName;
-		m_installedWatches[folder_only] = std::make_shared<INotifyFileWatcher>(
-				folder_only, m_inotify);
+		m_installedWatches[folder_only] = std::make_shared < INotifyFileWatcher
+				> (folder_only, m_inotify);
 	}
 	m_watchedFiles.insert(filepath.native());
 	logging::Info() << "Watching file " << filepath.native() << " now";
