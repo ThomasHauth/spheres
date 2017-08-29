@@ -178,22 +178,7 @@ GLint ShaderProgram::getUniformLocation(std::string name) const {
 		GLint uniformNumber;
 		glGetProgramiv(getId(), GL_ACTIVE_UNIFORMS, &uniformNumber);
 
-		std::vector < GLuint > uniformIndices;
-		std::vector<char*> uniformNames;
 		logging::Info() << "Got " << uniformNumber << " active uniforms";
-
-		for (int i = 0; i < uniformNumber; i++) {
-			char name[255];
-			GLsizei stringLength;
-			/*uniformIndices​.push_back(GLuint(i));
-			 uniformNames​.push_back(nullptr);
-			 */
-			// todo: not supported on Android
-			//glGetActiveUniformName(getId(), i, 255, &stringLength, &name[0]);
-			//logging::Info() << "Active Uniform name " << name;
-		}
-		//glGetActiveUniformInd
-
 		logging::Fatal() << "Cannot find uniform " << name << " in program";
 		return 0;
 	}
