@@ -14,7 +14,7 @@ if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 	# Descent compile configuratin
 	set (COMMON_COMPILE_FLAGS "${COMMON_COMPILE_FLAGS} -DUSE_THREADING_NULL=1 -DSPHERES_LOG_ENABLED=1 -DUSE_SDL=1")
 	# common gcc settings
-	set (COMMON_COMPILE_FLAGS "${COMMON_COMPILE_FLAGS} -Werror -Wfatal-errors -Wall -Wno-deprecated-declarations -Wno-strict-aliasing -Wno-int-to-pointer-cast -Wno-unused-private-field -Wno-reorder -Wno-unused-variable -Wno-overloaded-virtual -std=c++11 -pedantic")
+	set (COMMON_COMPILE_FLAGS "${COMMON_COMPILE_FLAGS} -Wshadow -Werror -Wfatal-errors -Wall -Wno-deprecated-declarations -Wno-strict-aliasing -Wno-int-to-pointer-cast -Wno-unused-private-field -Wno-reorder -Wno-unused-variable -Wno-overloaded-virtual -std=c++11 -pedantic")
 	set (COMMON_COMPILE_FLAGS "${COMMON_COMPILE_FLAGS} -Wextra" )
 endif()
 
