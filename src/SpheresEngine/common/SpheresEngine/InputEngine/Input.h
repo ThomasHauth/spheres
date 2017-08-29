@@ -49,7 +49,8 @@ public:
 		Unknown, /* the button is not mapped to a known enum */
 		Touchpad, /* on MagicWand Devices, the touchpad has been pressed down */
 		Escape, /* escape button */
-		Left, Right, Up, Down /* digital direction keys */
+		Left, Right, Up, Down, /* digital direction keys */
+		W, A, S, D /* Some FPS inspired buttons */
 	};
 
 	/**

@@ -20,7 +20,15 @@ void SdlSource::notifyEvent(SDL_Event evt) {
 		btnType = Input::ButtonType::Up;
 	if (evt.key.keysym.sym == SDLK_DOWN)
 		btnType = Input::ButtonType::Down;
-
+	// the following four are at bit weird thanks to the Neo layout !!
+	if (evt.key.keysym.sym == SDLK_a)
+		btnType = Input::ButtonType::A;
+	if (evt.key.keysym.sym == SDLK_v)
+		btnType = Input::ButtonType::W;
+	if (evt.key.keysym.sym == SDLK_i)
+		btnType = Input::ButtonType::S;
+	if (evt.key.keysym.sym == SDLK_u)
+		btnType = Input::ButtonType::D;
 	switch (evt.type) {
 	case SDL_KEYDOWN:
 		m_inputs.push_back(
@@ -48,7 +56,7 @@ void SdlSource::enableSource() {
 	if (m_grabMouse) {
 		// this will lock the mouse cursor to within the SDL window
 		// and also hide the cursor
-		SDL_SetRelativeMouseMode(SDL_TRUE);
+		SDL_SetRelativeMouseMode (SDL_TRUE);
 	}
 	m_isEnabled = true;
 }
