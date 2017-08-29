@@ -108,7 +108,12 @@ public:
 
 	/**
 	 * Abstract method to load a mesh
-	 * @param meshName is the name of the mesh to load, without path and extension
+	 * @param meshName is the name of the mesh to load, without path and extension. When using
+	 * .obj files which can contain multiple meshes in one file, the following convention is used:
+	 * <obj file name>_<mesh name in file>.
+	 * In formats which only contain one mesh/file, the file can simply be named
+	 * <obj file name>_<mesh name in file>.some_file_ext for the strings in game to stay the
+	 * same
 	 */
 	virtual MeshData loadMesh(std::string meshName) = 0;
 
