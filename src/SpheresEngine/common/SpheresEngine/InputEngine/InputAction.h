@@ -2,6 +2,8 @@
 
 #include <SpheresEngine/InputEngine/UserId.h>
 
+#include <vector>
+
 /**
  * An input which has been transformed into an action which
  * can be processed by an engine aspect. This class is derived from
