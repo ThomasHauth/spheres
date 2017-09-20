@@ -115,7 +115,10 @@ public:
 	 * <obj file name>_<mesh name in file>.some_file_ext for the strings in game to stay the
 	 * same
 	 */
-	virtual MeshData loadMesh(std::string meshName) = 0;
+	virtual MeshData loadMesh(std::string meshName);
+
+	virtual std::string loadTextFile(std::string const& fileName, bool noWatch =
+			false) = 0;
 
 	/**
 	 * Return the list of files that has been modified since the last execution of this method.

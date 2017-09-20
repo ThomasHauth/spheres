@@ -10,9 +10,9 @@
 typedef glm::quat Quaternion;
 
 namespace QuaternionSupport {
-inline Quaternion pointForwardAndUp() {
-	// point forward in OpenGL coords and no rotation
-	return Quaternion(0, glm::vec3(0, 0, -1.0));
+inline Quaternion unrotated() {
+	// quaternion which does not the models at all, great for initializing
+	return Quaternion(0, glm::vec3(0.0, 1.0, 0.0));
 }
 }
 

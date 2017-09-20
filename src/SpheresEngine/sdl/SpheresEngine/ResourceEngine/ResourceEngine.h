@@ -21,7 +21,8 @@ public:
 	 */
 	INotifyFileWatcher(std::string path, Inotify & inot) {
 		logging::Info() << "Installing watcher on file " << path;
-		m_installedWatch = std::make_shared<InotifyWatch>(path, IN_CLOSE_WRITE);
+		m_installedWatch = std::make_shared < InotifyWatch
+				> (path, IN_CLOSE_WRITE);
 		inot.Add(m_installedWatch.get());
 	}
 
@@ -98,20 +99,21 @@ public:
 	/**
 	 * Loads a mesh data from a text file
 	 */
-	MeshData loadMesh(std::string meshName) override;
-
-	/**
-	 * Load content from a text file
-	 */
-	std::string loadTextFile(std::string const& fileName, bool noWatch = false);
-
+	//MeshData loadMesh(std::string meshName) override;
 	/** returns the set of changed files, a consumer is allowed to remove
 	 * a file from this set. This assumes that one consumer (like the ShaderBackend)
 	 * the sole user of a file (which is true)
 	 */
 	std::set<std::string> & getChangedFiles() override;
 
+	/**
+	 * Load content from a text file
+	 */
+	std::string loadTextFile(std::string const& fileName, bool noWatch = false)
+			override;
+
 protected:
+
 	/**
 	 * Unloads texture
 	 */

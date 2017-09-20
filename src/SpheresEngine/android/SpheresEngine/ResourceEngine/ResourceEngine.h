@@ -53,8 +53,7 @@ public:
 	/**
 	 * Load mesh from android resources
 	 */
-	MeshData loadMesh(std::string meshName) override;
-
+	//MeshData loadMesh(std::string meshName) override;
 	/**
 	 * this is necessary if the application has been paused
 	 */
@@ -84,13 +83,14 @@ protected:
 	void freeMusic(MusicPtr) override {
 	}
 
-private:
-
 	/**
 	 * Generic method to load a textfile (shaders) for example
 	 * from the android resources
 	 */
-	std::string loadTextFile(std::string const& fileName);
+	std::string loadTextFile(std::string const& fileName, bool noWatch = false)
+			override;
+
+private:
 
 	/**
 	 * Intern method to load image from android resources

@@ -60,13 +60,13 @@ void ResourceEngine::reloadAllTextures() {
 	}
 }
 
-std::string ResourceEngine::loadTextFile(std::string const& fileName) {
+std::string ResourceEngine::loadTextFile(std::string const& fileName, bool watch) {
 	// todo: ibest to implement text file loading also on the Java side to be consistent
 	//return m_javaInterface->readTextFile(fileName);
 	logging::Info() << "requesting JavaSide to load textfile " << fileName;
 	return m_javaInterface->loadTextFile(fileName);
 }
-
+/*
 MeshData ResourceEngine::loadMesh(std::string meshName) {
 	MeshLoader ml;
 
@@ -75,4 +75,4 @@ MeshData ResourceEngine::loadMesh(std::string meshName) {
 
 	return ml.loadMesh(tf);
 }
-
+*/

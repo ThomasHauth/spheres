@@ -2,21 +2,17 @@
 #include <sstream>
 
 #include <boost/filesystem.hpp>
-#include <boost/algorithm/string/split.hpp>
-#include <boost/algorithm/string/classification.hpp>
-#include <algorithm>
 
 #include <SDL2/SDL_image.h>
 #include <SpheresEngine/ResourceEngine/ResourceEngine.h>
 #include <SpheresEngine/RenderEngine/Texture.h>
-#include <SpheresEngine/ResourceEngine/MeshLoader.h>
 
 std::pair<std::string, std::string> ResourceEngine::loadShader(
 		std::string const& shaderName, bool noWatch) {
 	const std::string fileName(getShaderPrefix() + shaderName + ".txt");
 	return std::make_pair(fileName, loadTextFile(fileName, noWatch));
 }
-
+/*
 MeshData ResourceEngine::loadMesh(std::string meshName) {
 
 	// not very optimal atm, as we will parse a file multipl times to extract
@@ -58,7 +54,7 @@ MeshData ResourceEngine::loadMesh(std::string meshName) {
 			<< " was not found in file " << fileName;
 	// keep the compiler happy !
 	return MeshData();
-}
+}*/
 
 std::string ResourceEngine::loadTextFile(std::string const& fileName,
 		bool noWatch) {
