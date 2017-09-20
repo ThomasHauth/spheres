@@ -23,7 +23,6 @@ include_directories( ${SpheresEngine_SOURCE_DIR}/common
     ${SPHERES_ENGINE_PLATFORM_HEADER}
 )
 
-
 include ( ${SpheresEngine_SOURCE_DIR}/../CMake_Externals.txt )
 
 # common compilation units which are shared between all platforms
@@ -47,6 +46,8 @@ set(SPHERES_ENGINE_COMMON_CPP
 	common/SpheresEngine/AnimationEngine/Sequence.cpp
 
 	common/SpheresEngine/Pathfinding/Pathfinding.cpp
+
+	common/SpheresEngine/PhysicsEngine/PhysicsEngine.cpp
 
 	common/SpheresEngine/RenderEngine/RenderEngine.cpp
 	common/SpheresEngine/RenderEngine/Texture.cpp
@@ -89,11 +90,27 @@ set(SPHERES_ENGINE_ANDROID_CPP
 )
 endif()
 
+## external libraries which will directly compiled in the Engine for 
+# simplicity and better optimization
+
+set(SPHERES_ENGINE_BULLET_CPP 
+
+	external/bullet/src/LinearMath/btAlignedAllocator.cpp
+	external/bullet/src/LinearMath/btConvexHull.cpp
+	external/bullet/src/LinearMath/btConvexHullComputer.cpp
+	external/bullet/src/LinearMath/btGeometryUtil.cpp
+	external/bullet/src/LinearMath/btPolarDecomposition.cpp
+	external/bullet/src/LinearMath/btQuickprof.cpp
+	external/bullet/src/LinearMath/btSerializer.cpp
+	external/bullet/src/LinearMath/btVector3.cpp
+)
 
 add_library(SpheresEngine STATIC #SHARED
-    # comomn cpps
+    # common cpps
 	${OPTIONAL_CPP}
     ${SPHERES_ENGINE_COMMON_CPP}
+    # externals directly compiled into the engine lib
+    ${SPHERES_ENGINE_BULLET_CPP}
     # platform specific
     ${SPHERES_ENGINE_SDL_CPP}
     ${SPHERES_ENGINE_ANDROID_CPP}
