@@ -5,6 +5,7 @@
 
 #include "PositionMixin.h"
 #include "RotationMixin.h"
+#include "CollisionMixin.h"
 
 /**
  * This is a game entity which can be positioned and rotated in 3d space
@@ -30,5 +31,9 @@ public:
 			v->extractData(cont, eo);
 		}
 	}
+
+};
+
+class PositionedCollisionEntity: public PositionedEntity, public CollisionMixin {
 
 };

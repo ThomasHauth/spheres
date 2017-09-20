@@ -7,7 +7,7 @@
 #include <SpheresEngine/ThreadedGameLoop.h>
 #include <SpheresEngine/InputEngine/InputEngine.h>
 #include <SpheresEngine/Pathfinding/Node.h>
-#include <SpheresEngine/Physics/PhysicsEngine.h>
+#include <SpheresEngine/PhysicsEngine/PhysicsEngine.h>
 #include <SpheresEngine/Performance/SectionTimer.h>
 #include <SpheresEngine/LimitedTiming.h>
 #include <SpheresEngine/Timing.h>

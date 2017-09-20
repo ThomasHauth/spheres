@@ -7,11 +7,13 @@ class EntityEngine;
 class InputEngine;
 class RenderEngine;
 class AnimationEngine;
+class PhysicsEngine;
 
 class Engines {
 public:
-	explicit Engines(EntityEngine & ee, InputEngine & ie, RenderEngine & re, AnimationEngine & ae) :
-			entity(ee), input(ie), render(re), animation(ae) {
+	explicit Engines(EntityEngine & ee, InputEngine & ie, RenderEngine & re,
+			AnimationEngine & ae, PhysicsEngine & pe) :
+			entity(ee), input(ie), render(re), animation(ae), physics(pe) {
 
 	}
 
@@ -19,4 +21,5 @@ public:
 	InputEngine & input;
 	RenderEngine & render;
 	AnimationEngine & animation;
+	PhysicsEngine & physics;
 };
