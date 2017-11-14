@@ -30,6 +30,10 @@ public:
 		if (managedList) {
 			managedList->push_back(ent.get());
 		}
+
+		//todo: register with physics engine
+
+
 		m_entities.push_back(std::move(ent));
 	}
 
