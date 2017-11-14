@@ -92,18 +92,7 @@ endif()
 
 ## external libraries which will directly compiled in the Engine for 
 # simplicity and better optimization
-
-set(SPHERES_ENGINE_BULLET_CPP 
-
-	external/bullet/src/LinearMath/btAlignedAllocator.cpp
-	external/bullet/src/LinearMath/btConvexHull.cpp
-	external/bullet/src/LinearMath/btConvexHullComputer.cpp
-	external/bullet/src/LinearMath/btGeometryUtil.cpp
-	external/bullet/src/LinearMath/btPolarDecomposition.cpp
-	external/bullet/src/LinearMath/btQuickprof.cpp
-	external/bullet/src/LinearMath/btSerializer.cpp
-	external/bullet/src/LinearMath/btVector3.cpp
-)
+file(GLOB_RECURSE SPHERES_ENGINE_BULLET_CPP external/bullet/src/*.cpp)
 
 add_library(SpheresEngine STATIC #SHARED
     # common cpps
