@@ -6,6 +6,8 @@
 #include <map>
 #include <memory>
 #include <functional>
+#include <algorithm>
+#include <vector>
 
 #include <boost/range/irange.hpp>
 #include "VectorTypes.h"
@@ -27,13 +29,21 @@ std::unique_ptr<T> make_unique(Args&&... args) {
 	return std::unique_ptr < T > (new T(std::forward<Args>(args)...));
 }
 }
-
 /**
  * Shortcut for using the unique_ptr class
  */
 template<class T> using uniq = std::unique_ptr<T>;
 
 namespace util {
+
+// note: this is not working yet
+template<class InputIt, class BinaryOperation>
+std::vector<typename InputIt::value_type> transformToVector(InputIt first1,
+		InputIt last1, BinaryOperation binary_op) {
+	std::vector<typename InputIt::value_type> vec;
+	std::transform(first1, last1, vec.begin(), binary_op);
+	return vec;
+}
 
 /**
  * Class which holds a value and also stores if the value is valid, because
