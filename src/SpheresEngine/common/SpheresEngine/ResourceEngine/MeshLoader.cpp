@@ -23,11 +23,9 @@ std::map<std::string, MeshData> MeshLoader::loadMesh(std::string meshData) {
 	util::ValidValue<std::string> thisObjectName;
 
 	for (std::string sLine : lines) {
-
 		std::vector < std::string > strs;
 		boost::split(strs, sLine, boost::is_any_of(" "));
 
-		std::cout << sLine << std::endl;
 		if (strs.size() > 1) {
 			if (strs[0] == "o") {
 				if (thisObjectName.isValid()) {
@@ -45,7 +43,6 @@ std::map<std::string, MeshData> MeshLoader::loadMesh(std::string meshData) {
 		if (strs.size() > 3) {
 			if (strs[0] == "v") {
 				auto p = parseVector<Vector3>(strs);
-				std::cout << " got v " << p.x() << " | " << p.y() << std::endl;
 				mdRaw.vtxPos.push_back(parseVector<Vector3>(strs));
 			} else if (strs[0] == "vn") {
 				mdRaw.vtxNormal.push_back(parseVector<Vector3>(strs));
@@ -83,8 +80,10 @@ std::map<std::string, MeshData> MeshLoader::loadMesh(std::string meshData) {
 		mdMap[thisObjectName.get()] = md;
 	}
 
-	logging::Info() << "Mesh Data " << meshData << " of " << mdMap.size()
-			<< " meshes loaded";
+	for (auto & mdItem: mdMap){
+		logging::Info() << "Mesh object with name " << mdItem.first << " loaded";
+	}
+	logging::Info() << "Mesh Data of " << mdMap.size() << " meshes loaded";
 
 	return mdMap;
 }
