@@ -11,7 +11,6 @@ include ( CMake_Defaults.txt )
 add_subdirectory( SpheresEngine )
 add_subdirectory( SpheresTest )
 add_subdirectory( SpheresTestBench )
-#add_subdirectory( DescentTest )
 
 enable_testing()
 add_test( NAME SpheresTest 
