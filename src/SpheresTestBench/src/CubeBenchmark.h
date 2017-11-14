@@ -100,7 +100,7 @@ public:
 
 		engines.input.addTransformer(std14::make_unique<RotateCubeTransform>());
 
-		auto mv1 = new MeshVisual("debugbox_box", "debug_texture");
+		auto mv1 = new MeshVisual("debugbox_box", "debug-texture-cube");
 		mv1->getData().Center = glm::vec3(0, 0, 0.5);
 		auto prepId = engines.render.addToPrepareVisual(mv1);
 
@@ -114,22 +114,6 @@ public:
 		cameraEntity->lookAt(Vector3::zero());
 		cameraEntity->setPosition(Vector3(5, 3, 0));
 		engines.entity.addEntity(std::move(cameraEntity));
-
-		// add animation to rotate the galaxy
-		/* disabled for now
-		 auto lmbRotateCube = [boxEntityPtr](float cur , float end )
-		 {
-		 boxEntityPtr->resetRotation();
-		 boxEntityPtr->rotate( Vector3(1.0, 0.8,0.6),
-		 // todo: something is still weird with the rotation units,
-		 // therefore this factor of 0.05
-		 0.05f *
-		 (cur / end)
-		 * 2.0f * boost::math::constants::pi<float>());
-		 }	;
-
-		 Animation an( { { 0.0f, Sequence(100.0f, lmbRotateCube) } }, true);
-		 engines.animation.addAnimation(an, 0.5f);*/
 	}
 
 	/**
