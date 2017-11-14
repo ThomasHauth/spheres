@@ -28,7 +28,6 @@ void DaydreamControllerSource::updateControllerState() {
     }
 
     // transfer all the known information
-
     if (m_controller_state.GetTouchDown()) {
         m_inputs.push_back( std::make_pair( UserId::useDefault(), Input::createButtonDown( Input::Device::MagicWand, Input::ButtonType::Touchpad)));
         logging::Info() << "MagicWand touch down !";
@@ -40,6 +39,7 @@ void DaydreamControllerSource::updateControllerState() {
 
     // always store the orientation
     auto orient = m_controller_state.GetOrientation();
+    logging::Info () << "Orientation is " << orient.qx << " : " << orient.qy << " : " << orient.qz << " : " << orient.qw;
     m_inputs.push_back(
             std::make_pair( UserId::useDefault(), Input::createOrientation( gvrToGlm(orient) )));
 }
