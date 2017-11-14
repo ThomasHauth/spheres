@@ -1,9 +1,31 @@
 #pragma once
 
 #include <SpheresEngine/Engines.h>
-//#include <SpheresEngine/EntityEngine/CommonEntities/PositionedEntit
-
 #include <SpheresEngine/Visuals/MeshVisual.h>
+
+#include <type_traits>
+
+class CollisionHandler {
+public:
+
+	template<typename T, typename std::enable_if<
+			std::is_base_of<CollisionMixin, T>::value>::type* = nullptr>
+	static void setup(Engines & engines, T& ent,
+			CollisionMixin::ShapeSource shapesource) {
+		ent.setShapeSource(shapesource);
+		ent.setBoxSize(Vector3(1.0f, 1.0f, 1.0f));
+
+		engines.physics.addEntity(&ent);
+
+		logging::Info() << "Registering Entity for physics collisions";
+	}
+
+	static void setup(Engines &, Entity&, CollisionMixin::ShapeSource) {
+		logging::Info()
+				<< "Skipping physics collision setup as respective mixin is not available";
+	}
+
+};
 
 class EntityFactory {
 public:
@@ -27,7 +49,9 @@ public:
 
 	template<class TEntity>
 	std::unique_ptr<TEntity> createEntity(
-			std::vector<MeshVisualConfig> meshConfigs) {
+			std::vector<MeshVisualConfig> meshConfigs,
+			util::ValidValue<CollisionMixin::ShapeSource> collisionShape =
+					util::ValidValue<CollisionMixin::ShapeSource>()) {
 
 		auto entity = std14::make_unique<TEntity>();
 
@@ -38,12 +62,15 @@ public:
 			auto prepId_mesh = m_engines.render.addToPrepareVisual(mesh_visual);
 
 			entity->addVisualPlaceholder(prepId_mesh);
-
 		}
-		//wandEntity->setPosition(Vector3(3.5, 3.5, -4.5));
-		//auto wandEntityPtr = wandEntity.get();
-		//wandEntity->addVisualPlaceholder(prepId_wand);
 
+		if (collisionShape.isValid()) {
+			CollisionHandler::setup(m_engines, *entity.get(),
+					collisionShape.get());
+		}
+
+		logging::Info() << "Entity with " << meshConfigs.size()
+				<< " mesh(es) created";
 		return entity;
 	}
 
@@ -51,5 +78,4 @@ private:
 
 	Engines & m_engines;
 
-}
-;
+};

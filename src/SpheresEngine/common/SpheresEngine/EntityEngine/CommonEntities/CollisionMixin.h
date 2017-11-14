@@ -23,6 +23,14 @@ public:
 		m_boxSize = s;
 	}
 
+	ShapeSource getShapeSource() const {
+		return m_shapeSource;
+	}
+
+	Vector3 getBoxSize() const {
+		return m_boxSize;
+	}
+
 private:
 	/**
 	 * Stores the position of this mixin
