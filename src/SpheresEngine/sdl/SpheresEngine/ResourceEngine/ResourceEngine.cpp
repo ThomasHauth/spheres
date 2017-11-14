@@ -12,49 +12,6 @@ std::pair<std::string, std::string> ResourceEngine::loadShader(
 	const std::string fileName(getShaderPrefix() + shaderName + ".txt");
 	return std::make_pair(fileName, loadTextFile(fileName, noWatch));
 }
-/*
-MeshData ResourceEngine::loadMesh(std::string meshName) {
-
-	// not very optimal atm, as we will parse a file multipl times to extract
-	// the one mesh we are looking for. In production, .obj parsing will anyhow
-	// be replaced by a faster binary-based method
-	MeshLoader ml;
-
-	// todo: break up file name & mesh name
-	std::vector < std::string > meshNamesSplit;
-	boost::split(meshNamesSplit, meshName, boost::is_any_of("_"),
-			boost::token_compress_on);
-
-	if (meshNamesSplit.size() < 2) {
-		logging::Fatal() << "Cannot split OBJ filename from mesh name "
-				<< meshName;
-	}
-	const auto fileNamePart = meshNamesSplit[0];
-	// only use the first part of the mesh name, blender generates a third object name part
-	// from the mesh name, but we will ignore this here
-	const auto meshNameOnly = meshNamesSplit[1];
-
-	const std::string fileName(getMeshPrefix() + fileNamePart + ".obj");
-	auto tf = loadTextFile(fileName);
-
-	auto loadedMeshes = ml.loadMesh(tf);
-
-	for (auto & kvMesh : loadedMeshes) {
-		std::vector < std::string > namesSplit;
-		boost::split(namesSplit, kvMesh.first, boost::is_any_of("_"),
-				boost::token_compress_on);
-		// only compare the first part of the mesh name and ignore the rest
-		if (namesSplit.size() > 0) {
-			if (namesSplit[0] == meshNameOnly) {
-				return kvMesh.second;
-			}
-		}
-	}
-	logging::Fatal() << "Mesh with name " << meshName
-			<< " was not found in file " << fileName;
-	// keep the compiler happy !
-	return MeshData();
-}*/
 
 std::string ResourceEngine::loadTextFile(std::string const& fileName,
 		bool noWatch) {
@@ -65,10 +22,6 @@ std::string ResourceEngine::loadTextFile(std::string const& fileName,
 	const size_t maxBuffer = 1024;
 	char inBuffer[maxBuffer];
 
-	/*with particle_fs
-	 is working, but
-	 not with
-	 particle_vtx*/
 	if (fileIn.is_open()) {
 
 		while (fileIn.good()) {
