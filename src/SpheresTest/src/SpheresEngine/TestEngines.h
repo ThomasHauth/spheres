@@ -5,6 +5,7 @@
 #include <SpheresEngine/AnimationEngine/AnimationEngine.h>
 #include <SpheresEngine/InputEngine/InputEngine.h>
 #include <SpheresEngine/ResourceEngine/ResourceEngine.h>
+#include <SpheresEngine/PhysicsEngine/PhysicsEngine.h>
 
 /**
  * This class derives from the default render engine
@@ -37,7 +38,7 @@ public:
 	}
 
 	Engines getEngines() {
-		return Engines(m_entity, m_input, m_render, m_animation);
+		return Engines(m_entity, m_input, m_render, m_animation, m_physics);
 	}
 
 	ResourceEngine m_res;
@@ -45,4 +46,5 @@ public:
 	AnimationEngine m_animation;
 	TestRenderEngine m_render;
 	InputEngine m_input;
+	PhysicsEngine m_physics;
 };

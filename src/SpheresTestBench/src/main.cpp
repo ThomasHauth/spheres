@@ -6,7 +6,7 @@
 #include <SpheresEngine/RenderEngine/RenderEngine.h>
 #include <SpheresEngine/EntityEngine/EntityEngine.h>
 #include <SpheresEngine/AnimationEngine/AnimationEngine.h>
-#include <SpheresEngine/Physics/PhysicsEngine.h>
+#include <SpheresEngine/PhysicsEngine/PhysicsEngine.h>
 #include <SpheresEngine/ResourceEngine/ResourceEngineAbstract.h>
 #include <SpheresEngine/RenderEngine/RenderBackendSDL.h>
 #include <SpheresEngine/ThreadedGameLoop.h>
@@ -39,7 +39,7 @@ int main() {
 	InputEngine inputEngine;
 	RenderEngine re(std14::make_unique<RenderBackendSDL>(resourceE), resourceE);
 
-	Engines engines(entityEngine, inputEngine, re, animationEngine);
+	Engines engines(entityEngine, inputEngine, re, animationEngine, physicsEngine);
 
 	auto uniqueSdlSource = std14::make_unique<SdlSource>();
 	auto ptrSdlSource = uniqueSdlSource.get();
