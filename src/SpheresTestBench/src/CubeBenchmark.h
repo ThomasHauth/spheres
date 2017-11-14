@@ -100,7 +100,7 @@ public:
 
 		engines.input.addTransformer(std14::make_unique<RotateCubeTransform>());
 
-		auto mv1 = new MeshVisual("debug_box", "debug_texture");
+		auto mv1 = new MeshVisual("debugbox_box", "debug_texture");
 		mv1->getData().Center = glm::vec3(0, 0, 0.5);
 		auto prepId = engines.render.addToPrepareVisual(mv1);
 
