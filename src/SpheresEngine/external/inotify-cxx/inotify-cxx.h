@@ -446,7 +446,7 @@ public:
    * 
    * \throw InotifyException thrown if changing fails
    */
-  void SetMask(uint32_t uMask) throw (InotifyException);   
+  void SetMask(uint32_t uMask);
   
   /// Returns the appropriate inotify class instance.
   /**
@@ -469,7 +469,7 @@ public:
    * 
    * \throw InotifyException thrown if enabling/disabling fails
    */
-  void SetEnabled(bool fEnabled) throw (InotifyException);
+  void SetEnabled(bool fEnabled);
   
   /// Checks whether the watch is enabled.
   /**
@@ -540,7 +540,7 @@ public:
    * 
    * \throw InotifyException thrown if inotify isn't available
    */
-  Inotify() throw (InotifyException);
+  Inotify() ;
   
   /// Destructor.
   /**
@@ -557,7 +557,7 @@ public:
    * 
    * \throw InotifyException thrown if adding failed
    */
-  void Add(InotifyWatch* pWatch) throw (InotifyException);
+  void Add(InotifyWatch* pWatch) ;
   
   /// Adds a new watch.
   /**
@@ -565,7 +565,7 @@ public:
    * 
    * \throw InotifyException thrown if adding failed
    */
-  inline void Add(InotifyWatch& rWatch) throw (InotifyException)
+  inline void Add(InotifyWatch& rWatch)
   {
     Add(&rWatch);
   }
@@ -578,7 +578,7 @@ public:
    * 
    * \throw InotifyException thrown if removing failed
    */
-  void Remove(InotifyWatch* pWatch) throw (InotifyException);
+  void Remove(InotifyWatch* pWatch) ;
   
   /// Removes a watch.
   /**
@@ -588,7 +588,7 @@ public:
    * 
    * \throw InotifyException thrown if removing failed
    */
-  inline void Remove(InotifyWatch& rWatch) throw (InotifyException)
+  inline void Remove(InotifyWatch& rWatch)
   {
     Remove(&rWatch);
   }
@@ -639,7 +639,7 @@ public:
    * 
    * \sa SetNonBlock()
    */
-  void WaitForEvents(bool fNoIntr = false) throw (InotifyException);
+  void WaitForEvents(bool fNoIntr = false) ;
   
   /// Returns the count of received and queued events.
   /**
@@ -665,7 +665,7 @@ public:
    * 
    * \throw InotifyException thrown if the provided pointer is NULL
    */
-  bool GetEvent(InotifyEvent* pEvt) throw (InotifyException);
+  bool GetEvent(InotifyEvent* pEvt) ;
   
   /// Extracts a queued inotify event.
   /**
@@ -675,7 +675,7 @@ public:
    * 
    * \throw InotifyException thrown only in very anomalous cases
    */
-  bool GetEvent(InotifyEvent& rEvt) throw (InotifyException)
+  bool GetEvent(InotifyEvent& rEvt)
   {
     return GetEvent(&rEvt);
   }
@@ -689,7 +689,7 @@ public:
    * 
    * \throw InotifyException thrown if the provided pointer is NULL
    */
-  bool PeekEvent(InotifyEvent* pEvt) throw (InotifyException);
+  bool PeekEvent(InotifyEvent* pEvt) ;
   
   /// Extracts a queued inotify event (without removing).
   /**
@@ -699,7 +699,7 @@ public:
    * 
    * \throw InotifyException thrown only in very anomalous cases
    */
-  bool PeekEvent(InotifyEvent& rEvt) throw (InotifyException)
+  bool PeekEvent(InotifyEvent& rEvt)
   {
     return PeekEvent(&rEvt);
   }
@@ -754,7 +754,7 @@ public:
    * 
    * \sa GetDescriptor(), SetCloseOnExec()
    */
-  void SetNonBlock(bool fNonBlock) throw (InotifyException);
+  void SetNonBlock(bool fNonBlock) ;
   
   /// Enables/disables closing on exec.
   /**
@@ -770,7 +770,7 @@ public:
    * 
    * \sa GetDescriptor(), SetNonBlock()
    */
-  void SetCloseOnExec(bool fClOnEx) throw (InotifyException);
+  void SetCloseOnExec(bool fClOnEx) ;
   
   /// Acquires a particular inotify capability/limit.
   /**
@@ -778,7 +778,7 @@ public:
    * \return capability/limit value
    * \throw InotifyException thrown if the given value cannot be acquired
    */
-  static uint32_t GetCapability(InotifyCapability_t cap) throw (InotifyException);
+  static uint32_t GetCapability(InotifyCapability_t cap) ;
   
   /// Modifies a particular inotify capability/limit.
   /**
@@ -789,14 +789,14 @@ public:
    *            Beware of setting extensive values - it may seriously
    *            affect system performance and/or stability.
    */
-  static void SetCapability(InotifyCapability_t cap, uint32_t val) throw (InotifyException);
+  static void SetCapability(InotifyCapability_t cap, uint32_t val) ;
   
   /// Returns the maximum number of events in the kernel queue.
   /**
    * \return maximum number of events in the kernel queue
    * \throw InotifyException thrown if the given value cannot be acquired
    */
-  inline static uint32_t GetMaxEvents() throw (InotifyException)
+  inline static uint32_t GetMaxEvents()
   {
     return GetCapability(IN_MAX_EVENTS);
   }
@@ -810,7 +810,7 @@ public:
    *            is set here the more physical memory may be used for the inotify
    *            infrastructure.
    */
-  inline static void SetMaxEvents(uint32_t val) throw (InotifyException)
+  inline static void SetMaxEvents(uint32_t val)
   {
     SetCapability(IN_MAX_EVENTS, val);
   }
@@ -823,7 +823,7 @@ public:
    * \return maximum number of inotify instances
    * \throw InotifyException thrown if the given value cannot be acquired
    */
-  inline static uint32_t GetMaxInstances() throw (InotifyException)
+  inline static uint32_t GetMaxInstances()
   {
     return GetCapability(IN_MAX_INSTANCES);
   }
@@ -837,7 +837,7 @@ public:
    *            is set here the more physical memory may be used for the inotify
    *            infrastructure.
    */
-  inline static void SetMaxInstances(uint32_t val) throw (InotifyException)
+  inline static void SetMaxInstances(uint32_t val)
   {
     SetCapability(IN_MAX_INSTANCES, val);
   }
@@ -850,7 +850,7 @@ public:
    * \return maximum number of inotify watches
    * \throw InotifyException thrown if the given value cannot be acquired
    */
-  inline static uint32_t GetMaxWatches() throw (InotifyException)
+  inline static uint32_t GetMaxWatches()
   {
     return GetCapability(IN_MAX_WATCHES);
   }
@@ -864,7 +864,7 @@ public:
    *            is set here the more physical memory may be used for the inotify
    *            infrastructure.
    */
-  inline static void SetMaxWatches(uint32_t val) throw (InotifyException)
+  inline static void SetMaxWatches(uint32_t val)
   {
     SetCapability(IN_MAX_WATCHES, val);
   }
@@ -880,7 +880,7 @@ private:
   
   friend class InotifyWatch;
   
-  static std::string GetCapabilityPath(InotifyCapability_t cap) throw (InotifyException);
+  static std::string GetCapabilityPath(InotifyCapability_t cap) ;
 };
 
 
