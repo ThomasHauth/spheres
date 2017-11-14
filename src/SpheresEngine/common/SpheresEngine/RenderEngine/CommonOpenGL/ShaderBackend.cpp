@@ -66,6 +66,7 @@ std::pair<std::string, Shader> ShaderBackend::loadShader(std::string name,
 	logging::Info() << "Shader " << name << " loaded";
 
 	if (m_prefixVersion.size() > 0) {
+		logging::Info() << "Adding prexfix '" << m_prefixVersion << "' to shader source";
 		shader_source = m_prefixVersion + "\n" + shader_source;
 	}
 
