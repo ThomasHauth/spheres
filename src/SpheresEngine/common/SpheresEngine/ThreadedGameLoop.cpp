@@ -167,6 +167,7 @@ void ThreadedGameLoop::run() {
 		LimitedTiming timing(1.0f/m_maxGameloopRate);
 
 		auto lmdLogic = getLogicLambda();
+		size_t count = 0;
 
 		m_terminate = false;
 		float timeDelta = timing.getMinimumWait( );
@@ -178,6 +179,14 @@ void ThreadedGameLoop::run() {
 			// is the sdl available, if yes, check for events...
 
 			timeDelta = timing.endWithWait();
+			count++;
+
+			if (m_exitAfterThreadIterations.isValid()) {
+				if (count >= m_exitAfterThreadIterations.get() ) {
+					logging::Info() << "Leaving logic thread because " << count << " done";
+					return;
+				}
+			}
 		}
 
 		logging::Info() << "Leaving logic thread";
@@ -195,10 +204,15 @@ void ThreadedGameLoop::run() {
 			lmdRenderInit();
 		// add the various renderers
 			lmdAddRenderer();
+			size_t count = 0;
 
 		// adding the camera target is only useful, if we are in a non-VR environmen
 		// VR uses VREyeTargets !
-			m_renderEngine.addTarget(std14::make_unique<CameraTarget>());
+			auto cameraTarget = std14::make_unique<CameraTarget>();
+			if (m_screenshotFilename.isValid()) {
+				cameraTarget->enableStoreScreenshot ( m_screenshotFilename.get() );
+			}
+			m_renderEngine.addTarget(std::move(cameraTarget));
 
 			float timeDelta = timing.getMinimumWait( );
 			while (!m_terminate) {
@@ -207,6 +221,14 @@ void ThreadedGameLoop::run() {
 				lmdRenderLambda( timeDelta);
 
 				timeDelta = timing.endWithWait();
+				count++;
+
+				if (m_exitAfterThreadIterations.isValid()) {
+					if (count >= m_exitAfterThreadIterations.get() ) {
+						logging::Info() << "Leaving render thread because " << count << " done";
+						return;
+					}
+				}
 			}
 			logging::Info() << "Leaving render thread";
 		};

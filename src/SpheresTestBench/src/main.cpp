@@ -19,11 +19,22 @@
 
 #include <random>
 #include <vector>
+#include <algorithm>
+#include <iostream>
+#include <iterator>
 
 /**
  * Instantiate one Benchmark and start the threaded game loop to render it.
  */
-int main() {
+int main(int argc, char *argv[]) {
+
+	std::vector < std::string > args;
+	for (int i = 0; i < argc; i++) {
+		args.emplace_back(std::string(argv[i]));
+	}
+
+	bool automated = std::any_of(args.begin(), args.end(),
+			[] (std::string & s) {return s == "--automate";});
 
 	std::vector<uniq<BenchmarkBase>> benchmarks;
 	benchmarks.push_back(std14::make_unique<MilkywayBenchmark>());
@@ -39,7 +50,8 @@ int main() {
 	InputEngine inputEngine;
 	RenderEngine re(std14::make_unique<RenderBackendSDL>(resourceE), resourceE);
 
-	Engines engines(entityEngine, inputEngine, re, animationEngine, physicsEngine);
+	Engines engines(entityEngine, inputEngine, re, animationEngine,
+			physicsEngine);
 
 	auto uniqueSdlSource = std14::make_unique<SdlSource>();
 	auto ptrSdlSource = uniqueSdlSource.get();
@@ -55,8 +67,15 @@ int main() {
 			physicsEngine);
 	gameLoop.setSdlSource(ptrSdlSource);
 
+	if (automated) {
+		gameLoop.setMaxIterations(40);
+		gameLoop.setScreenshotFilename("benchmark_out.bmp");
+	}
+
 	gameLoop.run();
 	re.closeRenderer();
 	re.closeDisplay();
+
+	SDL_Quit();
 	return 0;
 }

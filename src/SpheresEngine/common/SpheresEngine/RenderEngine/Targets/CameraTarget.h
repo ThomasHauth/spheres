@@ -2,6 +2,7 @@
 
 #include "RenderTargetBase.h"
 #include <SpheresEngine/Visuals/VisualDataExtract.h>
+#include <SpheresEngine/Util.h>
 
 /**
  * Target which can be used to render the regular OpenGL 3d projection
@@ -20,4 +21,12 @@ public:
 	 * Finish rendering to this target. Nothing done here (yet)
 	 */
 	void afterRenderToTarget(VisualDataExtractContainer & vd);
+
+	void enableStoreScreenshot(std::string fileName) {
+		m_storeScreenshot = fileName;
+	}
+
+private:
+
+	util::ValidValue<std::string> m_storeScreenshot = util::ValidValue<std::string>::invalid();
 };

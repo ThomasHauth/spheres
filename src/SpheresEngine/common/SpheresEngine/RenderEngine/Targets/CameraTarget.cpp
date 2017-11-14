@@ -2,6 +2,8 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <vector>
+
 TargetData CameraTarget::beforeRenderToTarget(VisualDataExtractContainer & vd,
 		std::vector<RenderBackendDetails*>) {
 	TargetData td;
@@ -24,6 +26,17 @@ TargetData CameraTarget::beforeRenderToTarget(VisualDataExtractContainer & vd,
 }
 
 void CameraTarget::afterRenderToTarget(VisualDataExtractContainer &) {
+	if (m_storeScreenshot.isValid()) {
+		int x = 0, y = 0;
+		int w = 800;
+		int h = 600;
 
+		std::vector <unsigned char *> pixels (w * h * 4); // 4 bytes for RGBA
+		glReadPixels(x, y, w, h, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+
+		SDL_Surface * surf = SDL_CreateRGBSurfaceFrom(pixels.data(), w, h, 8 * 4,
+				w * 4, 0, 0, 0, 0);
+		SDL_SaveBMP(surf, m_storeScreenshot.get().c_str());
+		SDL_FreeSurface(surf);
+	}
 }
-

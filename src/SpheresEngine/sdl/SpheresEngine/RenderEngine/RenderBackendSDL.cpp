@@ -34,11 +34,6 @@ void RenderBackendSDL::openDisplay() {
 			SDL_WINDOW_OPENGL);
 
 	m_glContext = SDL_GL_CreateContext(m_displayWindow);
-	/*TODO: Check that we have OpenGL */
-	/*if ((displayRendererInfo.flags & SDL_RENDERER_ACCELERATED) == 0
-	 || (displayRendererInfo.flags & SDL_RENDERER_TARGETTEXTURE) == 0) {
-	 logging::Fatal() << "SDL Renderer is not supported";
-	 }*/
 
 	logging::Info() << "SDL GL Renderer created";
 }

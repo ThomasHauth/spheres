@@ -71,6 +71,14 @@ public:
 	 */
 	std::function<void(float)> getRenderLambda();
 
+	void setMaxIterations( size_t i ) {
+		m_exitAfterThreadIterations = i;
+	}
+
+	void setScreenshotFilename( std::string f ) {
+		m_screenshotFilename = f;
+	}
+
 #ifdef USE_SDL
 	/**
 	 * If SDL is used, this method needs to be used to set the input source
@@ -162,6 +170,10 @@ private:
 	 * Profile information will be logged if true
 	 */
 	const bool m_profile = false;
+
+	util::ValidValue<size_t> m_exitAfterThreadIterations = util::ValidValue<size_t>::invalid();
+
+	util::ValidValue<std::string> m_screenshotFilename = util::ValidValue<std::string>::invalid();
 
 	/**
 	 * The file name the profile output will be written to
