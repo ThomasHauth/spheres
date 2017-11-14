@@ -67,9 +67,9 @@ Mesh MeshBackend::loadMesh(std::string name, Texture &,
 	glEnableVertexAttribArray(
 			shaderProg.getAttribLocation("normals_modelspace"));
 	glVertexAttribPointer(shaderProg.getAttribLocation("normals_modelspace"),
-	/* 3 dim normal vector */
+	// 3 dim normal vector
 	3, GL_FLOAT, GL_FALSE, combinedBufferSize,
-	/* offset within buffer is 3 (xyz pos) + 2 (uv) = 5*/
+	// offset within buffer is 3 (xyz pos) + 2 (uv) = 5
 	(const GLvoid*) (5 * sizeof(GLfloat)));
 
 	// unbind the VBO and VAO
