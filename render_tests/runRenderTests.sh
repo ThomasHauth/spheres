@@ -2,6 +2,10 @@
 cd build/SpheresTestBench/
 # just to be sure ...
 make -j4
+if [ $? -ne 0 ]; then
+    echo "Compile failed"
+    exit 1
+fi
 # make sure the old ones are deleted
 rm benchmark_out.bmp
 ./SpheresTestBench --automate
