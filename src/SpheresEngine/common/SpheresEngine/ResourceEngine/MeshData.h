@@ -46,8 +46,8 @@ public:
 	 * Return one OpenGL-compatible version of the array packed with XYZ and UV
 	 * coordinates and 3d normals
 	 */
-	std::vector<GLfloat> asXYZUVNormals() const {
-		return asConfigurable(true, true, true);
+	std::vector<GLfloat> asXYZUVNormals( bool flipV = true) const {
+		return asConfigurable(true, true, true, flipV);
 	}
 
 	/**
@@ -55,7 +55,7 @@ public:
 	 * which can be directly downloaded to OpenGL
 	 */
 	std::vector<GLfloat> asConfigurable(bool withXYZ, bool withUV,
-			bool withNormal) const {
+			bool withNormal, bool flipV = true) const {
 		std::vector < GLfloat > v;
 
 		if ((UV.size() == 0) && (Position.size() > 0)) {
@@ -73,7 +73,7 @@ public:
 			if (withUV) {
 
 				v.push_back(UV[i].x());
-				v.push_back(UV[i].y());
+				v.push_back(flipV ? 1.0-UV[i].y() : UV[i].y());
 			}
 			if (withNormal) {
 				v.push_back(Normal[i].x());

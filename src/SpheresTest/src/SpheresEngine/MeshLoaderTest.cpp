@@ -153,10 +153,12 @@ TEST(MeshLoaderTest, prepare) {
 
 	// check UV coords
 	ASSERT_FLOAT_EQ(0.1, flatMesh[3]);
-	ASSERT_FLOAT_EQ(1.0, flatMesh[4]);
+	// this value is flipped in the blender -> engine conversion
+	ASSERT_FLOAT_EQ(0.0, flatMesh[4]);
 
 	ASSERT_FLOAT_EQ(0.5, flatMesh[faceStride + 3]);
-	ASSERT_FLOAT_EQ(1.0, flatMesh[faceStride + 4]);
+	// this value is flipped in the blender -> engine conversion
+	ASSERT_FLOAT_EQ(0.0, flatMesh[faceStride + 4]);
 }
 
 TEST(MeshLoaderTest, prepareNoUvInfo) {
