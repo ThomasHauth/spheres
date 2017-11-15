@@ -99,7 +99,11 @@ TEST(MeshLoaderTest, prepare) {
 			"v 0.967183 1.000000 1.000001\n"
 			"v -1.032816 1.000000 1.000000\n"
 			"v -1.032816 1.000000 -1.000000\n"
-			"vt 1.0 1.0\n"
+			"vt 0.1 1.0\n"
+			"vt 0.5 1.0\n"
+			"vt 0.25 0.0\n"
+			"vt 0.2 0.0\n"
+			"vt 0.1 0.0\n"
 			"vn 0.000000 -1.000000 0.000000\n"
 			"vn 0.000000 1.000000 0.000000\n"
 			"vn 1.000000 -0.000000 0.000000\n"
@@ -107,8 +111,8 @@ TEST(MeshLoaderTest, prepare) {
 			"vn -1.000000 -0.000000 -0.000000\n"
 			"usemtl Material\n"
 			"s off\n"
-			"f 9/1/1 3/1/1 4/1/1\n"
-			"f 8/1/2 7/1/2 6/1/2\n";
+			"f 9/2/1 3/3/1 4/4/1\n"
+			"f 8/5/2 7/6/2 6/6/2\n";
 
 	// only one object in the mesh data, take the first
 	auto mdMap = ld.loadMesh(meshData);
@@ -116,6 +120,7 @@ TEST(MeshLoaderTest, prepare) {
 	auto firstMesh = mdMap["FirstCube"];
 	auto secondMesh = mdMap["SecondCube"];
 
+	const size_t faceStride = 8;
 	const size_t faceCount = 12;
 
 	ASSERT_EQ(size_t(faceCount * 3), firstMesh.Position.size());
@@ -142,13 +147,16 @@ TEST(MeshLoaderTest, prepare) {
 	ASSERT_FLOAT_EQ(-3.000000, secondMesh.Position[0].z());
 	ASSERT_FLOAT_EQ(-1.000000, secondMesh.Normal[0].y());
 
-	flatMesh = firstMesh.asXYZUVNormals();
-	ASSERT_FLOAT_EQ(0.967184, flatMesh[0]);
-	ASSERT_FLOAT_EQ(1.000000, flatMesh[2]);
+	flatMesh = secondMesh.asXYZUVNormals();
+	ASSERT_FLOAT_EQ(0.867184, flatMesh[0]);
+	ASSERT_FLOAT_EQ(-3.000000, flatMesh[2]);
 
-	ASSERT_FLOAT_EQ(0.0, flatMesh[5]);
-	ASSERT_FLOAT_EQ(-1.000000, flatMesh[6]);
+	// check UV coords
+	ASSERT_FLOAT_EQ(0.1, flatMesh[3]);
+	ASSERT_FLOAT_EQ(1.0, flatMesh[4]);
 
+	ASSERT_FLOAT_EQ(0.5, flatMesh[faceStride + 3]);
+	ASSERT_FLOAT_EQ(1.0, flatMesh[faceStride + 4]);
 }
 
 TEST(MeshLoaderTest, prepareNoUvInfo) {
