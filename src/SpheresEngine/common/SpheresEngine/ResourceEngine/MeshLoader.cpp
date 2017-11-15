@@ -42,7 +42,6 @@ std::map<std::string, MeshData> MeshLoader::loadMesh(std::string meshData) {
 
 		if (strs.size() > 3) {
 			if (strs[0] == "v") {
-				auto p = parseVector<Vector3>(strs);
 				mdRaw.vtxPos.push_back(parseVector<Vector3>(strs));
 			} else if (strs[0] == "vn") {
 				mdRaw.vtxNormal.push_back(parseVector<Vector3>(strs));
@@ -111,7 +110,6 @@ MeshLoader::PosTexNormalTuple MeshLoader::parseFaceTuple(std::string ft) const {
 		auto texturePos =
 				strs[1] == "" ?
 						util::ValidValue<int>::invalid() :
-						util::ValidValue<int>() :
 						boost::lexical_cast<int>(strs[1]);
 
 		return std::make_tuple(boost::lexical_cast<int>(strs[0]), texturePos,
