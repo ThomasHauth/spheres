@@ -13,7 +13,7 @@ std::map<std::string, MeshData> MeshLoader::loadMesh(std::string meshData) {
 	};
 
 	// Important: This contains the vertex, normal and uv data loaded from one obj
-	// The indexing for different objects in on the total list of vertex data contained
+	// The indexing for different objects in one file is on the total list of vertex data contained
 	// in the file !
 	MdRawStruct mdRaw;
 
@@ -110,6 +110,7 @@ MeshLoader::PosTexNormalTuple MeshLoader::parseFaceTuple(std::string ft) const {
 // texture pos can be "" if no texture has been assigned
 		auto texturePos =
 				strs[1] == "" ?
+						util::ValidValue<int>::invalid() :
 						util::ValidValue<int>() :
 						boost::lexical_cast<int>(strs[1]);
 
