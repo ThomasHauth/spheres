@@ -52,7 +52,8 @@ public:
 
 	/**
 	 * This method will create entries for each face of the mesh, with x y z u v
-	 * which can be directly downloaded to OpenGL
+	 * which can be directly downloaded to OpenGL.
+	 * The convention for uv from blender ot OGL needs to flip v
 	 */
 	std::vector<GLfloat> asConfigurable(bool withXYZ, bool withUV,
 			bool withNormal, bool flipV = true) const {
