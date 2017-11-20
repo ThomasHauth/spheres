@@ -108,6 +108,10 @@ public:
 		auto boxEntityPtr = boxEntity.get();
 		boxEntity->addVisualPlaceholder(prepId);
 		boxEntity->addAspect(engines, std14::make_unique<RotateCubeAspect>());
+		// rotate 45 degrees
+		boxEntity->setRotation( Quaternion(glm::vec3(0.0f,
+										             boost::math::constants::pi<float>() * 0.25,
+													 0.0f)));
 		engines.entity.addEntity(std::move(boxEntity));
 
 		auto cameraEntity = std14::make_unique<CameraEntity>();
