@@ -12,6 +12,7 @@
 #include <SpheresEngine/ThreadedGameLoop.h>
 #include <SpheresEngine/Timing.h>
 #include <SpheresEngine/Util.h>
+#include <SpheresEngine/DataTypes/Resolution.h>
 
 #include <SpheresEngine/InputEngine/SdlSource.h>
 
@@ -43,12 +44,14 @@ int main(int argc, char *argv[]) {
 	// todo: select via command line
 	auto selectedBenchmark = benchmarks[1].get();
 
+	Resolution resolution(800, 600);
+
 	ResourceEngine resourceE;
 	EntityEngine entityEngine;
 	AnimationEngine animationEngine;
 	PhysicsEngine physicsEngine;
 	InputEngine inputEngine;
-	RenderEngine re(std14::make_unique<RenderBackendSDL>(resourceE), resourceE);
+	RenderEngine re(std14::make_unique<RenderBackendSDL>(resourceE, resolution), resourceE);
 
 	Engines engines(entityEngine, inputEngine, re, animationEngine,
 			physicsEngine);

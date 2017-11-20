@@ -6,6 +6,7 @@
 #include <SpheresEngine/RenderEngine/OpenGLInclude.h>
 #include <SpheresEngine/RenderEngine/CommonOpenGL/MeshBackend.h>
 #include <SpheresEngine/RenderEngine/RenderBackendBase.h>
+#include <SpheresEngine/DataTypes/Resolution.h>
 
 class ResourceEngine;
 class Mesh;
@@ -20,7 +21,7 @@ public:
 	 * Contstructor of the RenderBackend, initializing some configuration
 	 * values
 	 */
-	RenderBackendSDL(ResourceEngine &);
+	RenderBackendSDL(ResourceEngine &, Resolution);
 
 	/**
 	 * Override virtual dtor to clean up local objects
@@ -51,6 +52,13 @@ public:
 	 * Swap window with SDL swap
 	 */
 	void present() override;
+
+
+	/**
+	 * Called before any target is rendered. Allows the backend to
+	 * provide updated backend details to the render targets
+	 */
+	std::vector< std::shared_ptr<RenderBackendDetails>> beforeRender() override;
 
 	/**
 	 * todo: remove and use directly
@@ -100,4 +108,6 @@ private:
 	 * Reference to the resource engine to load meshes, textures etc.
 	 */
 	ResourceEngine & m_re;
+
+	Resolution m_resolution;
 };

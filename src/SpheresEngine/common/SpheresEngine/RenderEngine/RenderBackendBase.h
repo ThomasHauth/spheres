@@ -4,6 +4,7 @@
 #include <SpheresEngine/RenderEngine/CommonOpenGL/ShaderBackend.h>
 #include <SpheresEngine/RenderEngine/Mesh.h>
 #include <string>
+#include <memory>
 #include <vector>
 #include <utility>
 
@@ -76,7 +77,7 @@ public:
 	 * Called before any target is rendered. Allows the backend to
 	 * provide updated backend details to the render targets
 	 */
-	virtual std::vector<RenderBackendDetails*> beforeRender() {
+	virtual std::vector< std::shared_ptr<RenderBackendDetails>> beforeRender() {
 		return {};
 	}
 

@@ -2,9 +2,11 @@
 
 #include <SpheresEngine/RenderEngine/CommonOpenGL/GLSupport.h>
 #include <SpheresEngine/Log.h>
+#include <SpheresEngine/RenderEngine/RenderBackendSDLDetails.h>
 
-RenderBackendSDL::RenderBackendSDL(ResourceEngine & re) :
-		m_shaderBackend(re, "#version 130"), m_re(re), m_meshBackend(re, *this) {
+RenderBackendSDL::RenderBackendSDL(ResourceEngine & re, Resolution res) :
+		m_shaderBackend(re, "#version 130"), m_re(re), m_meshBackend(re, *this), m_resolution(
+				res) {
 
 }
 
@@ -20,7 +22,7 @@ void RenderBackendSDL::openDisplay() {
 	logging::Info() << "Initializing SDL based OpenGL";
 
 	std::string windowName = "Spheres Engine";
-	SDL_Init(SDL_INIT_VIDEO);
+	SDL_Init (SDL_INIT_VIDEO);
 
 	// tell SDL to use no legacy OpenGL functions
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
@@ -30,12 +32,16 @@ void RenderBackendSDL::openDisplay() {
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	m_displayWindow = SDL_CreateWindow(windowName.c_str(),
-	SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600,
-			SDL_WINDOW_OPENGL);
+			SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, m_resolution.w(),
+			m_resolution.h(), SDL_WINDOW_OPENGL);
 
 	m_glContext = SDL_GL_CreateContext(m_displayWindow);
 
 	logging::Info() << "SDL GL Renderer created";
+}
+
+std::vector<std::shared_ptr<RenderBackendDetails>> RenderBackendSDL::beforeRender() {
+	return {std::make_shared< RenderBackendSDLDetails >( m_resolution )};
 }
 
 void RenderBackendSDL::closeDisplay() {

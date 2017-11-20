@@ -3,6 +3,8 @@
 #include <SpheresEngine/Visuals/VisualDataExtract.h>
 #include <SpheresEngine/RenderEngine/RenderBackendBase.h>
 
+#include <memory>
+
 /**
  * Base content shared by all render targets
  */
@@ -35,7 +37,7 @@ public:
 	 * called before the first render command for this target is executed.
 	 */
 	virtual TargetData beforeRenderToTarget(VisualDataExtractContainer &,
-			std::vector<RenderBackendDetails*>) = 0;
+			std::vector<std::shared_ptr<RenderBackendDetails>>&) = 0;
 
 	/**
 	 * Finishing render pipeline for rendering to this target. This is
@@ -47,16 +49,18 @@ protected:
 
 	/**
 	 * Convenience function to find the BackendDetails required by a target
-	 * and cast and return it
+	 * and cast and return it. Returns a non-owning pointer which you are
+	 * not allowed to store outside of the lifetime of dt
 	 */
 	template<class TSpecificBackendDetails>
 	TSpecificBackendDetails * extractBackendDetails(
-			std::vector<RenderBackendDetails*> dt) {
-		for (auto * p : dt) {
-			auto casted = dynamic_cast<TSpecificBackendDetails *>(p);
+			std::vector<std::shared_ptr<RenderBackendDetails>> dt) {
+		for (auto & shared_p : dt) {
+			auto casted = dynamic_cast<TSpecificBackendDetails *>(shared_p.get());
 			// was this cast successfully ?
-			if (casted)
+			if (casted) {
 				return casted;
+			}
 		}
 
 		logging::Fatal()

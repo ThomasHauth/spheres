@@ -31,14 +31,14 @@ void RenderEngine::render() {
 	m_visualChange.insert(m_visualChange.end(), visualChanges.begin(),
 			visualChanges.end());
 
-	auto renderBackendDetails =
-	m_renderBackend->beforeRender();
+	auto renderBackendDetails = m_renderBackend->beforeRender();
 
 	// targets can be for example right or left eye etc.
 	// the Visual renderers must decide when and how they want to render on a target
 	for (auto & t : m_targets) {
 
-		auto const targetData = t->beforeRenderToTarget(m_lastVisualData, renderBackendDetails);
+		auto const targetData = t->beforeRenderToTarget(m_lastVisualData,
+				renderBackendDetails);
 		for (auto & r : m_renderers) {
 			auto visualChange = r->render(*m_renderBackend.get(),
 					m_lastVisualData, targetData);
@@ -54,8 +54,4 @@ void RenderEngine::render() {
 	}
 
 	m_renderBackend->present();
-
-	for ( auto * ptr : renderBackendDetails) {
-		delete ptr;
-	}
 }

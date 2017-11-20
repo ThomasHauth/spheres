@@ -2,6 +2,7 @@
 
 #include "RenderTargetBase.h"
 #include <SpheresEngine/Visuals/VisualDataExtract.h>
+#include <SpheresEngine/DataTypes/Resolution.h>
 #include <SpheresEngine/Util.h>
 
 /**
@@ -15,7 +16,7 @@ public:
 	 * and shaders
 	 */
 	TargetData beforeRenderToTarget(VisualDataExtractContainer & vd,
-			std::vector<RenderBackendDetails*> backendDetails);
+			std::vector<std::shared_ptr<RenderBackendDetails>>& backendDetails);
 
 	/**
 	 * Finish rendering to this target. Nothing done here (yet)
@@ -29,4 +30,7 @@ public:
 private:
 
 	util::ValidValue<std::string> m_storeScreenshot = util::ValidValue<std::string>::invalid();
+
+	// will be set in the beforeRenderToTarget
+	Resolution m_lastResolution = Resolution(1,1);
 };
