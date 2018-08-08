@@ -80,7 +80,7 @@ std::map<std::string, MeshData> MeshLoader::loadMesh(std::string meshData) {
 	}
 
 	for (auto & mdItem: mdMap){
-		logging::Info() << "Mesh object with name " << mdItem.first << " loaded";
+		logging::Info() << "Mesh object with name " << mdItem.first << " loaded, has " << mdItem.second.getVertexCount() << " vertices.";
 	}
 	logging::Info() << "Mesh Data of " << mdMap.size() << " meshes loaded";
 
