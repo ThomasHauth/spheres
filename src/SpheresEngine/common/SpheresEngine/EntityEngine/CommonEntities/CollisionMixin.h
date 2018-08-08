@@ -2,6 +2,8 @@
 
 #include <SpheresEngine/VectorTypes.h>
 
+// for GLM_GTX_transform to be available
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
 
 /**
